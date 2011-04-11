@@ -1,0 +1,8 @@
+name: SupplySign
+main: redsgreens.SupplySign.SupplySign
+version: 1.2
+author: redsgreens
+commands:
+  supplysign:
+    description: 'Used to reload data and list available SupplySign kits' 
+    usage: '/supplysign <reload | listkits> (Used to reload data and list available SupplySign kits)'
