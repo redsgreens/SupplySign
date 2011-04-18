@@ -30,16 +30,8 @@ public class SupplySignPlayerListener extends PlayerListener {
 		
 		Sign sign;
 		if(block.getType() == Material.CHEST){
-			if(block.getFace(BlockFace.NORTH).getType() == Material.WALL_SIGN)
-				sign = new CraftSign(block.getFace(BlockFace.NORTH));
-			else if(block.getFace(BlockFace.EAST).getType() == Material.WALL_SIGN)
-				sign = new CraftSign(block.getFace(BlockFace.EAST));
-			else if(block.getFace(BlockFace.SOUTH).getType() == Material.WALL_SIGN)
-				sign = new CraftSign(block.getFace(BlockFace.SOUTH));
-			else if(block.getFace(BlockFace.WEST).getType() == Material.WALL_SIGN)
-				sign = new CraftSign(block.getFace(BlockFace.WEST));
-			else
-				return;
+			sign = SupplySign.getAttachedSign(block);
+			if(sign == null) return;
 		} 
 		else 
 			sign = new CraftSign(block);

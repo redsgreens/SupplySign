@@ -1,4 +1,4 @@
-Plugin Name: SupplySign 1.2 by redsgreens
+Plugin Name: SupplySign 1.3 by redsgreens
 
 Description: Use this plugin to distribute items and blocks to your players by creating [Supply] signs
              that load a chest interface when right-clicked.
@@ -13,10 +13,10 @@ The Basics : 1. Place a sign
 		     3. On each of the remaining lines, put the name(or item id) of the contents of the supply sign
 		     4. Right-click the sign to open the chest. 
 
-Chest Sign : To place a sign on a chest, make sure it is a single-wide chest, and make sure it is not within
-             one block of another single chest. There are cases where this might work, but it can be
-             glitchy, so be careful. Right-clicking the sign or the chest will display the contents of the
-             sign.
+Chest Sign : To place a sign on a chest, make sure it is not within one block of another chest. There are 
+             cases where this might work, but it can be glitchy, so be careful. Right-clicking the sign or 
+             the chest will display the contents of the sign. If you use a large chest, you can place a sign
+             on both halves of it. 
 
 Using Kits : To use a kit, set the first line to [Supply] as usual, then put "kit:" followed by the kit name
              on the second line, ie. "kit:wool". 
