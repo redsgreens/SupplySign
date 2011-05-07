@@ -1,4 +1,6 @@
-Plugin Name: SupplySign 1.3 by redsgreens
+Plugin Name: SupplySign 1.4 by redsgreens
+
+URL        : http://forums.bukkit.org/threads/7938/
 
 Description: Use this plugin to distribute items and blocks to your players by creating [Supply] signs
              that load a chest interface when right-clicked.
@@ -7,6 +9,7 @@ Permissions: Ops and players with the "supplysign.create" permission will be abl
              Ops and players with the "supplysign.access" permission will be able to access them.
              Ops and players with the "supplysign.destroy" permission can destroy existing supply signs.
              Ops and players with the "supplysign.reload" permission can trigger a reload of items/kits data.
+             Players with "supplysign.access.kitname" can access the kit called "kitname".
 
 The Basics : 1. Place a sign 
 		     2. Set the first line to [Supply]

@@ -40,28 +40,44 @@ public class SupplySignPlayerListener extends PlayerListener {
 		{
 			if (sign.getLine(0).equals("§1[Supply]")){
 				event.setCancelled(true);
-				if(SupplySign.isAuthorized(event.getPlayer(), "access"))
-				{
-					ArrayList<String> itemList;
 
-					if(sign.getLine(1).trim().contains("kit:")){
-						String[] split = sign.getLine(1).trim().split(":");
+				ArrayList<String> itemList = new ArrayList<String>();
+				
+				// if it's a kit, test for generic access permission or access to this specific kit
+				if(sign.getLine(1).trim().contains("kit:")){
+					String[] split = sign.getLine(1).trim().split(":");
+					
+					if(SupplySign.isAuthorized(event.getPlayer(), "access") || SupplySign.isAuthorized(event.getPlayer(), "access." + split[1]))
 						itemList = SupplySign.getKit(split[1]);
-						
-					}else{
-						itemList = new ArrayList<String>();
+					else if(SupplySign.getConfigShowErrorsInClient())
+					{
+						event.getPlayer().sendMessage("Error: you don't have permission to access this SupplySign.");
+						return;
+					}
+				}
+				else
+				{
+					if(SupplySign.isAuthorized(event.getPlayer(), "access"))
+					{
+						// it's not a kit, so load the items from the lines on the sign
 						if(!sign.getLine(1).trim().equalsIgnoreCase(""))
 							itemList.add(sign.getLine(1).trim());
 						if(!sign.getLine(2).trim().equalsIgnoreCase(""))
 							itemList.add(sign.getLine(2).trim());
 						if(!sign.getLine(3).trim().equalsIgnoreCase(""))
 							itemList.add(sign.getLine(3).trim());
+
 					}
-					if(itemList.size() > 0)
-						SupplySign.showInventory(event.getPlayer(), itemList);
-					
-					return;
+					else if(SupplySign.getConfigShowErrorsInClient())
+					{
+						event.getPlayer().sendMessage("Error: you don't have permission to access this SupplySign.");
+						return;
+					}
 				}
+				if(itemList.size() > 0)
+					SupplySign.showInventory(event.getPlayer(), itemList);
+				
+				return;
 			}
 		}
 		catch (Throwable ex)

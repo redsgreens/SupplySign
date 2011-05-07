@@ -112,22 +112,27 @@ public class SupplySign extends JavaPlugin {
     		// supplysign command
     		if(commandName.equals("supplysign") && args.length == 1)
     		{
-    			if(args[0].equalsIgnoreCase("reload") && isAuthorized(player, "reload"))
+    			if(args[0].equalsIgnoreCase("reload"))
     			{
-        			// supplysign reload
-    				try{
-         	        	loadConfig();
-        	        	loadItems();
-        	        	loadKits();
+    				if(isAuthorized(player, "reload"))
+    				{
+            			// supplysign reload
+        				try{
+             	        	loadConfig();
+            	        	loadItems();
+            	        	loadKits();
 
-        	    		System.out.println("SupplySign loaded " + ItemsMap.size() + " items from items.csv.");
-        	    		System.out.println("SupplySign loaded " + KitsMap.size() + " kits from kits.yml.");
-    				} catch (Exception e) {
-    					System.out.println("SupplySign error: " + e.getMessage());
-       				}
-    				
-        			player.sendMessage("SupplySign data reloaded.");
-    				return true;
+            	    		System.out.println("SupplySign loaded " + ItemsMap.size() + " items from items.csv.");
+            	    		System.out.println("SupplySign loaded " + KitsMap.size() + " kits from kits.yml.");
+        				} catch (Exception e) {
+        					System.out.println("SupplySign error: " + e.getMessage());
+           				}
+        				
+            			player.sendMessage("SupplySign data reloaded.");
+        				return true;
+    				}
+    				else
+    					player.sendMessage("Error: You don't have SupplySign reload permission.");
     			}
     			else if(args[0].equalsIgnoreCase("listkits"))
     			{
@@ -156,8 +161,8 @@ public class SupplySign extends JavaPlugin {
     	}
     	catch (Exception ex){}
     	
-    	if(retval == false && getConfigShowErrorsInClient())
-    		p.sendMessage("Error: You don't have SupplySign " + perm + " permission.");
+//    	if(retval == false && getConfigShowErrorsInClient())
+//    		p.sendMessage("Error: You don't have SupplySign " + perm + " permission.");
     	
     	return retval;	
     }
