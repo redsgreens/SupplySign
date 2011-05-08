@@ -41,7 +41,7 @@ public class SupplySignPlayerListener extends PlayerListener {
 			if (sign.getLine(0).equals("§1[Supply]")){
 				event.setCancelled(true);
 
-				ArrayList<String> itemList = new ArrayList<String>();
+				ArrayList<Object> itemList = new ArrayList<Object>();
 				
 				// if it's a kit, test for generic access permission or access to this specific kit
 				if(sign.getLine(1).trim().contains("kit:")){
@@ -50,10 +50,7 @@ public class SupplySignPlayerListener extends PlayerListener {
 					if(SupplySign.isAuthorized(event.getPlayer(), "access") || SupplySign.isAuthorized(event.getPlayer(), "access." + split[1]))
 						itemList = SupplySign.getKit(split[1]);
 					else if(SupplySign.getConfigShowErrorsInClient())
-					{
 						event.getPlayer().sendMessage("Error: you don't have permission to access this SupplySign.");
-						return;
-					}
 				}
 				else
 				{
@@ -69,11 +66,9 @@ public class SupplySignPlayerListener extends PlayerListener {
 
 					}
 					else if(SupplySign.getConfigShowErrorsInClient())
-					{
 						event.getPlayer().sendMessage("Error: you don't have permission to access this SupplySign.");
-						return;
-					}
 				}
+				
 				if(itemList.size() > 0)
 					SupplySign.showInventory(event.getPlayer(), itemList);
 				

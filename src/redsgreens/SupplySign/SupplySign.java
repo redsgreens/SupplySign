@@ -45,7 +45,7 @@ public class SupplySign extends JavaPlugin {
     private final HashMap<Player, Boolean> debugees = new HashMap<Player, Boolean>();
  	private final static Logger logger = Logger.getLogger("Minecraft");
 	private static Map<String, ItemStack> ItemsMap = new HashMap<String, ItemStack>();
-	private static HashMap<String,ArrayList<String>> KitsMap = new HashMap<String,ArrayList<String>>();
+	private static HashMap<String,ArrayList<Object>> KitsMap = new HashMap<String,ArrayList<Object>>();
 	private static HashMap<String,Object> ConfigMap = new HashMap<String, Object>(); 
 	private static File folder;
 
@@ -70,8 +70,8 @@ public class SupplySign extends JavaPlugin {
 
 			// test for a blank or broken kits file
 			if(KitsMap == null){
-				KitsMap = new HashMap<String,ArrayList<String>>();
-				ArrayList<String> al = new ArrayList<String>();
+				KitsMap = new HashMap<String,ArrayList<Object>>();
+				ArrayList<Object> al = new ArrayList<Object>();
 				al.add("null");
 				KitsMap.put("null", al);
 			}
@@ -253,7 +253,7 @@ public class SupplySign extends JavaPlugin {
 		KitsMap.clear();
 		
 		try{
-			KitsMap = (HashMap<String,ArrayList<String>>)yaml.load(rx);
+			KitsMap = (HashMap<String,ArrayList<Object>>)yaml.load(rx);
 		}
 		finally
 		{
@@ -326,16 +326,16 @@ public class SupplySign extends JavaPlugin {
 	}
 
 	// return a kit by name
-	public static ArrayList<String> getKit(String kit) throws Exception{
+	public static ArrayList<Object> getKit(String kit) throws Exception{
 		if (KitsMap.containsKey(kit)){
-			ArrayList<String> al = KitsMap.get(kit);
+			ArrayList<Object> al = KitsMap.get(kit);
 			return al;
 		}
 		throw new Exception("Unknown kit name: " + kit);
 	}
 	
 	// arranges the items to be displayed and shows the inventory dialog
-	public static void showInventory(Player p, ArrayList<String> itemList){
+	public static void showInventory(Player p, ArrayList<Object> itemList){
 		CraftPlayer cp = (CraftPlayer)p;
 		CraftInventoryPlayer inv = new CraftInventoryPlayer(new InventoryPlayer(cp.getHandle()));
 		
@@ -346,50 +346,50 @@ public class SupplySign extends JavaPlugin {
 			switch(itemList.size()){
 			case 1:
 				for(int i=0; i<36; i++)
-					inv.addItem(getItem(itemList.get(0)));
+					inv.addItem(getItem(itemList.get(0).toString()));
 				break;
 
 			case 2:
 				for(int i=0; i<18; i++)
-					inv.addItem(getItem(itemList.get(0)));
+					inv.addItem(getItem(itemList.get(0).toString()));
 				for(int i=0; i<18; i++)
-					inv.addItem(getItem(itemList.get(1)));
+					inv.addItem(getItem(itemList.get(1).toString()));
 				break;
 			
 			case 3:
 					for(int i=0; i<4; i++){
-						inv.setItem((i*9), getItem(itemList.get(0))); inv.setItem((i*9)+1, getItem(itemList.get(0))); inv.setItem((i*9)+2, getItem(itemList.get(0)));
-						inv.setItem((i*9)+3, getItem(itemList.get(1))); inv.setItem((i*9)+4, getItem(itemList.get(1))); inv.setItem((i*9)+5, getItem(itemList.get(1)));
-						inv.setItem((i*9)+6, getItem(itemList.get(2))); inv.setItem((i*9)+7, getItem(itemList.get(2))); inv.setItem((i*9)+8, getItem(itemList.get(2)));
+						inv.setItem((i*9), getItem(itemList.get(0).toString())); inv.setItem((i*9)+1, getItem(itemList.get(0).toString())); inv.setItem((i*9)+2, getItem(itemList.get(0).toString()));
+						inv.setItem((i*9)+3, getItem(itemList.get(1).toString())); inv.setItem((i*9)+4, getItem(itemList.get(1).toString())); inv.setItem((i*9)+5, getItem(itemList.get(1).toString()));
+						inv.setItem((i*9)+6, getItem(itemList.get(2).toString())); inv.setItem((i*9)+7, getItem(itemList.get(2).toString())); inv.setItem((i*9)+8, getItem(itemList.get(2).toString()));
 					}
 				break;
 				
 			case 4:
 					for(int i=0; i<4; i++)
 						for(int j=0; j<9; j++)
-							inv.setItem((i*9)+j, getItem(itemList.get(i)));
+							inv.setItem((i*9)+j, getItem(itemList.get(i).toString()));
 				break;
 
 			case 5:
 					for(int i=0; i<4; i++)
 						for(int j=0; j<7; j++)
-							  inv.setItem((i*9)+j, getItem(itemList.get(i)));
+							  inv.setItem((i*9)+j, getItem(itemList.get(i).toString()));
 					for(int k=0; k<4; k++){
-						inv.setItem((k*9)+7, getItem(itemList.get(4)));
-						inv.setItem((k*9)+8, getItem(itemList.get(4)));
+						inv.setItem((k*9)+7, getItem(itemList.get(4).toString()));
+						inv.setItem((k*9)+8, getItem(itemList.get(4).toString()));
 					}
 				break;
 				
 			case 6:
 				for(int i=0; i<2; i++){
-					inv.setItem((i*9), getItem(itemList.get(0))); inv.setItem((i*9)+1, getItem(itemList.get(0))); inv.setItem((i*9)+2, getItem(itemList.get(0)));
-					inv.setItem((i*9)+3, getItem(itemList.get(1))); inv.setItem((i*9)+4, getItem(itemList.get(1))); inv.setItem((i*9)+5, getItem(itemList.get(1)));
-					inv.setItem((i*9)+6, getItem(itemList.get(2))); inv.setItem((i*9)+7, getItem(itemList.get(2))); inv.setItem((i*9)+8, getItem(itemList.get(2)));
+					inv.setItem((i*9), getItem(itemList.get(0).toString())); inv.setItem((i*9)+1, getItem(itemList.get(0).toString())); inv.setItem((i*9)+2, getItem(itemList.get(0).toString()));
+					inv.setItem((i*9)+3, getItem(itemList.get(1).toString())); inv.setItem((i*9)+4, getItem(itemList.get(1).toString())); inv.setItem((i*9)+5, getItem(itemList.get(1).toString()));
+					inv.setItem((i*9)+6, getItem(itemList.get(2).toString())); inv.setItem((i*9)+7, getItem(itemList.get(2).toString())); inv.setItem((i*9)+8, getItem(itemList.get(2).toString()));
 				}
 				for(int i=2; i<4; i++){
-					inv.setItem((i*9), getItem(itemList.get(3))); inv.setItem((i*9)+1, getItem(itemList.get(3))); inv.setItem((i*9)+2, getItem(itemList.get(3)));
-					inv.setItem((i*9)+3, getItem(itemList.get(4))); inv.setItem((i*9)+4, getItem(itemList.get(4))); inv.setItem((i*9)+5, getItem(itemList.get(4)));
-					inv.setItem((i*9)+6, getItem(itemList.get(5))); inv.setItem((i*9)+7, getItem(itemList.get(5))); inv.setItem((i*9)+8, getItem(itemList.get(5)));
+					inv.setItem((i*9), getItem(itemList.get(3).toString())); inv.setItem((i*9)+1, getItem(itemList.get(3).toString())); inv.setItem((i*9)+2, getItem(itemList.get(3).toString()));
+					inv.setItem((i*9)+3, getItem(itemList.get(4).toString())); inv.setItem((i*9)+4, getItem(itemList.get(4).toString())); inv.setItem((i*9)+5, getItem(itemList.get(4).toString()));
+					inv.setItem((i*9)+6, getItem(itemList.get(5).toString())); inv.setItem((i*9)+7, getItem(itemList.get(5).toString())); inv.setItem((i*9)+8, getItem(itemList.get(5).toString()));
 				}
 
 				break;
@@ -401,28 +401,28 @@ public class SupplySign extends JavaPlugin {
 						else jmax = 4;
 						
 						for(int j=0; j<jmax; j++)
-							  inv.addItem(getItem(itemList.get(i)));
+							  inv.addItem(getItem(itemList.get(i).toString()));
 					}
 				break;
 
 			case 8:
 					for(int i=0; i<4; i++){
-						  inv.addItem(getItem(itemList.get((2*i))));
-						  inv.addItem(getItem(itemList.get((2*i))));
-						  inv.addItem(getItem(itemList.get((2*i))));
-						  inv.addItem(getItem(itemList.get((2*i))));
-						  inv.addItem(getItem(itemList.get((2*i)+1)));
-						  inv.addItem(getItem(itemList.get((2*i)+1)));
-						  inv.addItem(getItem(itemList.get((2*i)+1)));
-						  inv.addItem(getItem(itemList.get((2*i)+1)));
-						  inv.addItem(getItem(itemList.get((2*i)+1)));
+						  inv.addItem(getItem(itemList.get((2*i)).toString()));
+						  inv.addItem(getItem(itemList.get((2*i)).toString()));
+						  inv.addItem(getItem(itemList.get((2*i)).toString()));
+						  inv.addItem(getItem(itemList.get((2*i)).toString()));
+						  inv.addItem(getItem(itemList.get((2*i)+1).toString()));
+						  inv.addItem(getItem(itemList.get((2*i)+1).toString()));
+						  inv.addItem(getItem(itemList.get((2*i)+1).toString()));
+						  inv.addItem(getItem(itemList.get((2*i)+1).toString()));
+						  inv.addItem(getItem(itemList.get((2*i)+1).toString()));
 					}
 				break;
 
 			case 9:
 				for(int j=0; j<4; j++)
 					for(int i=0; i<9; i++)
-						  inv.addItem(getItem(itemList.get(i)));
+						  inv.addItem(getItem(itemList.get(i).toString()));
 				break;
 				
 			case 10:
@@ -430,7 +430,7 @@ public class SupplySign extends JavaPlugin {
 			case 12:
 					for(int i=0; i<itemList.size(); i++)
 						for(int j=0; j<3; j++)
-							  inv.addItem(getItem(itemList.get(i)));
+							  inv.addItem(getItem(itemList.get(i).toString()));
 				break;
 
 			case 13:
@@ -444,14 +444,14 @@ public class SupplySign extends JavaPlugin {
 					if(i<9)
 						pos=i;
 					else pos=i+9;
-					inv.setItem(pos, getItem(itemList.get(i)));
-					inv.setItem(pos+9, getItem(itemList.get(i)));
+					inv.setItem(pos, getItem(itemList.get(i).toString()));
+					inv.setItem(pos+9, getItem(itemList.get(i).toString()));
 				}
 				break;
 				
 			default: 
 				for(int i=0; i<itemList.size(); i++)
-					inv.setItem(i, getItem(itemList.get(i)));
+					inv.setItem(i, getItem(itemList.get(i).toString()));
 			}
 		} catch (Exception e) {
 			System.out.println("SupplySign exception: " + e.getMessage());
