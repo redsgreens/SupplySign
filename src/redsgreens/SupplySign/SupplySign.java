@@ -90,6 +90,7 @@ public class SupplySign extends JavaPlugin {
         pm.registerEvent(Type.SIGN_CHANGE, blockListener, Priority.Monitor, this);
         pm.registerEvent(Type.BLOCK_PLACE, blockListener, Priority.Monitor, this);
         pm.registerEvent(Type.BLOCK_BREAK, blockListener, Priority.Monitor, this);
+        pm.registerEvent(Type.BLOCK_DISPENSE, blockListener, Priority.Monitor, this);
         pm.registerEvent(Type.PLAYER_INTERACT, playerListener, Priority.Monitor, this);
 
 		// print loaded message

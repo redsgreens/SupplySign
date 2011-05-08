@@ -157,4 +157,8 @@ public class SupplySignBlockListener extends BlockListener {
 		}
 	}
 
+	public void onBlockDispense(BlockDispenseEvent event)
+	{
+		Dispenser d = (Dispenser)event.getBlock();
+	}
 }
