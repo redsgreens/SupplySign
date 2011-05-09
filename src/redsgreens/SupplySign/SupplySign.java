@@ -583,6 +583,33 @@ public class SupplySign extends JavaPlugin {
 	}
 
 	public static void fillDispenser(Dispenser dispenser, Sign sign){
+		try{
+			ArrayList<Object> itemList = new ArrayList<Object>();
+			
+			// test to see if it's a kit
+			if(sign.getLine(1).trim().contains("kit:")){
+				String[] split = sign.getLine(1).trim().split(":");
+				itemList = getKit(split[1]);
+			}
+			else
+			{
+				// it's not a kit, so load the items from the lines on the sign
+				if(!sign.getLine(1).trim().equalsIgnoreCase(""))
+					itemList.add(sign.getLine(1).trim());
+				if(!sign.getLine(2).trim().equalsIgnoreCase(""))
+					itemList.add(sign.getLine(2).trim());
+				if(!sign.getLine(3).trim().equalsIgnoreCase(""))
+					itemList.add(sign.getLine(3).trim());
+
+			}
+			
+			// if any valid items were found, fill the inventory
+			if(itemList.size() > 0)
+			{
+
+			}
+		}
+		catch(Exception ex){}
 		
 	}
 	
