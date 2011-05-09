@@ -199,7 +199,7 @@ public class SupplySignBlockListener extends BlockListener {
 		if(event.isCancelled())
 			return;
 		
-		Dispenser d = (Dispenser)event.getBlock();
+		Dispenser d = new CraftDispenser(event.getBlock());
 		Sign s = SupplySign.getAttachedSign(event.getBlock());
 
 		if(s != null)

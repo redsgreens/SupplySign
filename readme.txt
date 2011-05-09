@@ -1,4 +1,4 @@
-Plugin Name: SupplySign 1.4 by redsgreens
+Plugin Name: SupplySign 1.5 by redsgreens
 
 URL        : http://forums.bukkit.org/threads/7938/
 
@@ -20,6 +20,8 @@ Chest Sign : To place a sign on a chest, make sure it is not within one block of
              cases where this might work, but it can be glitchy, so be careful. Right-clicking the sign or 
              the chest will display the contents of the sign. If you use a large chest, you can place a sign
              on both halves of it. 
+
+Dispensers :
 
 Using Kits : To use a kit, set the first line to [Supply] as usual, then put "kit:" followed by the kit name
              on the second line, ie. "kit:wool". 

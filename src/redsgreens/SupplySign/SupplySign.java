@@ -23,6 +23,7 @@ import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.craftbukkit.inventory.CraftInventoryPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Priority;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
@@ -600,13 +601,17 @@ public class SupplySign extends JavaPlugin {
 					itemList.add(sign.getLine(2).trim());
 				if(!sign.getLine(3).trim().equalsIgnoreCase(""))
 					itemList.add(sign.getLine(3).trim());
-
 			}
-			
-			// if any valid items were found, fill the inventory
+
+			// if any valid items were found, fill the inventory with first item in itemList
 			if(itemList.size() > 0)
 			{
+				Inventory inv = dispenser.getInventory();
 
+				for(int x=0; x < inv.getSize(); x++){
+					inv.clear(x);
+					inv.setItem(x, getItem(itemList.get(0).toString()));
+				}
 			}
 		}
 		catch(Exception ex){}
