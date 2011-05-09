@@ -39,17 +39,29 @@ public class SupplySignPlayerListener extends PlayerListener {
 			else
 			{ // prevent opening inventory of a dispenser with a supplysign attached
 				event.setCancelled(true);
-				event.getPlayer().sendMessage("Error: SupplySign attached, inventory unavailable.");
+				if(SupplySign.getConfigShowErrorsInClient())
+					event.getPlayer().sendMessage("§cErr: SupplySign attached to dispenser, inventory unavailable.");
 				return;
 			}
 		}
 		else 
 			sign = new CraftSign(block);
-
+		
 		try
 		{
 			if (sign.getLine(0).equals("§1[Supply]")){
 				event.setCancelled(true);
+
+				// if it's a dispenser cancel right click on sign
+				if(sign.getBlock().getType() == Material.WALL_SIGN)
+				{
+					if(SupplySign.getBlockBehindWallSign(sign).getType() == Material.DISPENSER)
+					{
+						if(SupplySign.getConfigShowErrorsInClient())
+							event.getPlayer().sendMessage("§cErr: SupplySign attached to dispenser, inventory unavailable.");
+						return;
+					}
+				}
 
 				ArrayList<Object> itemList = new ArrayList<Object>();
 				
@@ -60,7 +72,7 @@ public class SupplySignPlayerListener extends PlayerListener {
 					if(SupplySign.isAuthorized(event.getPlayer(), "access") || SupplySign.isAuthorized(event.getPlayer(), "access." + split[1]))
 						itemList = SupplySign.getKit(split[1]);
 					else if(SupplySign.getConfigShowErrorsInClient())
-						event.getPlayer().sendMessage("Error: you don't have permission to access this SupplySign.");
+						event.getPlayer().sendMessage("§cErr: you don't have permission to access this SupplySign.");
 				}
 				else
 				{
@@ -76,7 +88,7 @@ public class SupplySignPlayerListener extends PlayerListener {
 
 					}
 					else if(SupplySign.getConfigShowErrorsInClient())
-						event.getPlayer().sendMessage("Error: you don't have permission to access this SupplySign.");
+						event.getPlayer().sendMessage("§cErr: you don't have permission to access this SupplySign.");
 				}
 				
 				if(itemList.size() > 0)
@@ -88,7 +100,7 @@ public class SupplySignPlayerListener extends PlayerListener {
 		catch (Throwable ex)
 		{
 			if(SupplySign.getConfigShowErrorsInClient())
-				event.getPlayer().sendMessage("§cError: " + ex.getMessage());
+				event.getPlayer().sendMessage("§cErr: " + ex.getMessage());
 		}
     }
 }

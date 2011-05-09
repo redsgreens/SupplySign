@@ -81,26 +81,9 @@ public class SupplySignBlockListener extends BlockListener {
 				if(signBlock.getFace(BlockFace.DOWN).getType() == Material.SIGN_POST || signBlock.getFace(BlockFace.DOWN).getType() == Material.WALL_SIGN)
 					blockAgainst = signBlock.getFace(BlockFace.DOWN);
 			}
-			else if(signBlock.getType() == Material.WALL_SIGN){
+			else if(signBlock.getType() == Material.WALL_SIGN)
+				blockAgainst = SupplySign.getBlockBehindWallSign(new CraftSign(signBlock));
 				
-				switch(signBlock.getData()){ // determine sign direction and get block behind it
-				case 2: // facing east
-					blockAgainst = signBlock.getFace(BlockFace.WEST);
-					break;
-				case 3: // facing west
-					blockAgainst = signBlock.getFace(BlockFace.EAST);
-					break;
-				case 4: // facing north
-					blockAgainst = signBlock.getFace(BlockFace.SOUTH);
-					break;
-				case 5: // facing south
-					blockAgainst = signBlock.getFace(BlockFace.NORTH);
-					break;
-				default:
-					return;			
-				}
-			}
-
 			if(blockAgainst != null){
 				if(blockAgainst.getType() == Material.SIGN_POST || blockAgainst.getType() == Material.WALL_SIGN){
 					// the new sign is against another sign
@@ -191,7 +174,7 @@ public class SupplySignBlockListener extends BlockListener {
 				}
 				else{
 					// not allowed
-					event.setLine(0, "§c[Error]");
+					event.setLine(0, "§c[Err]");
 					event.setLine(1, "§cNot Allowed");
 				}
 				return;
@@ -200,7 +183,7 @@ public class SupplySignBlockListener extends BlockListener {
 		catch (Throwable ex)
 		{
 			if(SupplySign.getConfigShowErrorsInClient())
-				event.getPlayer().sendMessage("§cError: " + ex.getMessage());
+				event.getPlayer().sendMessage("§cErr: " + ex.getMessage());
 		}
 	}
 

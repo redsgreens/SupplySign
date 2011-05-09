@@ -135,7 +135,7 @@ public class SupplySign extends JavaPlugin {
         				return true;
     				}
     				else
-    					player.sendMessage("Error: You don't have SupplySign reload permission.");
+    					player.sendMessage("§cErr: You don't have SupplySign reload permission.");
     			}
     			else if(args[0].equalsIgnoreCase("listkits"))
     			{
@@ -616,6 +616,33 @@ public class SupplySign extends JavaPlugin {
 		}
 		catch(Exception ex){}
 		
+	}
+	
+	// get the block that has a wall sign on it
+	public static Block getBlockBehindWallSign(Sign sign)
+	{
+		Block blockAgainst = null;
+		Block signBlock = sign.getBlock();
+		
+		if(sign.getType() == Material.WALL_SIGN)
+		{
+			switch(signBlock.getData()){ // determine sign direction and get block behind it
+			case 2: // facing east
+				blockAgainst = signBlock.getFace(BlockFace.WEST);
+				break;
+			case 3: // facing west
+				blockAgainst = signBlock.getFace(BlockFace.EAST);
+				break;
+			case 4: // facing north
+				blockAgainst = signBlock.getFace(BlockFace.SOUTH);
+				break;
+			case 5: // facing south
+				blockAgainst = signBlock.getFace(BlockFace.NORTH);
+				break;
+			}
+		}
+		
+		return blockAgainst;
 	}
 	
     public void onDisable() {
