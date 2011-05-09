@@ -4,6 +4,7 @@ import org.bukkit.Material;
 import org.bukkit.event.block.BlockListener;
 
 import org.bukkit.block.*;
+import org.bukkit.craftbukkit.block.CraftDispenser;
 import org.bukkit.craftbukkit.block.CraftSign;
 import org.bukkit.event.block.*;
 import org.bukkit.inventory.ItemStack;
@@ -117,7 +118,7 @@ public class SupplySignBlockListener extends BlockListener {
 					// they are allowed, so set the first line to blue
 					event.setLine(0, "§1[Supply]");
 
-					// if there is a single-wide chest nearby, then create a wallsign against it
+					// if there is a chest nearby, then create a wallsign against it
 					if(SupplySign.isValidChest(signBlock.getFace(BlockFace.NORTH)) ||
 							SupplySign.isValidChest(signBlock.getFace(BlockFace.EAST)) ||
 							SupplySign.isValidChest(signBlock.getFace(BlockFace.SOUTH)) ||
@@ -140,6 +141,41 @@ public class SupplySignBlockListener extends BlockListener {
 						for(int i=0; i<lines.length; i++)
 							sign.setLine(i, lines[i]);
 					}
+					// if it's a dispenser, put the sign there
+					else if(SupplySign.isValidDispenser(signBlock.getFace(BlockFace.NORTH)) ||
+							SupplySign.isValidDispenser(signBlock.getFace(BlockFace.EAST)) ||
+							SupplySign.isValidDispenser(signBlock.getFace(BlockFace.SOUTH)) ||
+							SupplySign.isValidDispenser(signBlock.getFace(BlockFace.WEST))){
+
+						String[] lines = event.getLines();
+
+						signBlock.setType(Material.WALL_SIGN);
+						Sign sign = new CraftSign(signBlock);
+						Dispenser dispenser = null;
+						
+						if(SupplySign.isValidDispenser(signBlock.getFace(BlockFace.NORTH))){
+							signBlock.setData((byte)5);
+							dispenser = new CraftDispenser(signBlock.getFace(BlockFace.NORTH));
+						}
+						else if(SupplySign.isValidDispenser(signBlock.getFace(BlockFace.EAST))){
+							signBlock.setData((byte)3);
+							dispenser = new CraftDispenser(signBlock.getFace(BlockFace.EAST));
+						}
+						else if(SupplySign.isValidDispenser(signBlock.getFace(BlockFace.SOUTH))){
+							signBlock.setData((byte)4);
+							dispenser = new CraftDispenser(signBlock.getFace(BlockFace.SOUTH));
+						}
+						else if(SupplySign.isValidDispenser(signBlock.getFace(BlockFace.WEST))){
+							signBlock.setData((byte)2);
+							dispenser = new CraftDispenser(signBlock.getFace(BlockFace.WEST));
+						}
+
+						for(int i=0; i<lines.length; i++)
+							sign.setLine(i, lines[i]);
+						
+						SupplySign.fillDispenser(dispenser, sign);
+					}
+ 
 
 				}
 				else{
@@ -157,8 +193,16 @@ public class SupplySignBlockListener extends BlockListener {
 		}
 	}
 
+	// refill the dispenser after it fires
 	public void onBlockDispense(BlockDispenseEvent event)
 	{
+		if(event.isCancelled())
+			return;
+		
 		Dispenser d = (Dispenser)event.getBlock();
+		Sign s = SupplySign.getAttachedSign(event.getBlock());
+
+		if(s != null)
+			SupplySign.fillDispenser(d, s);
 	}
 }
