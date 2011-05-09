@@ -36,7 +36,7 @@ public class SupplySignBlockListener extends BlockListener {
 
 	@Override
 	public void onBlockBreak(BlockBreakEvent event)
-	// only allow players with permission to break a SupplySign
+	// only allow players with permission to break a SupplySign or a chest/dispenser with one attached
 	{
 		// return if the event is already cancelled
 		if (event.isCancelled()) return;
@@ -47,6 +47,17 @@ public class SupplySignBlockListener extends BlockListener {
 			if (sign.getLine(0).equals("§1[Supply]") && !SupplySign.isAuthorized(event.getPlayer(), "destroy")){
 				event.setCancelled(true);
 				return;
+			}
+		}
+		else if (event.getBlock().getType() == Material.CHEST || event.getBlock().getType() == Material.DISPENSER)
+		{
+			Sign sign = SupplySign.getAttachedSign(event.getBlock());
+			if(sign != null)
+			{
+				if(!SupplySign.isAuthorized(event.getPlayer(), "destroy")){
+					event.setCancelled(true);
+					return;
+				}
 			}
 		}
 

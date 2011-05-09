@@ -17,11 +17,16 @@ The Basics : 1. Place a sign
 		     4. Right-click the sign to open the chest. 
 
 Chest Sign : To place a sign on a chest, make sure it is not within one block of another chest. There are 
-             cases where this might work, but it can be glitchy, so be careful. Right-clicking the sign or 
-             the chest will display the contents of the sign. If you use a large chest, you can place a sign
-             on both halves of it. 
+             cases where this might work, but it can be glitchy, so be careful. Place the sign on the ground
+             in front of the chest, then after you are done editing it, the sign will attach itself to the
+             chest. Right-clicking the sign or the chest will display the contents of the sign. If you use 
+             a large chest, you can place a sign on both halves of it. 
 
-Dispensers :
+Dispensers : Attach a sign to a dispenser in the same way you would attach one to a sign. The inventory of
+             the dispenser will always be full of whatever is on the sign. If you use a kit, or if you put 
+             multiple items on the sign, only the first will be used. Remember that dispensers require
+             redstone to activate, so it might be a good idea to wire up the dispenser and test it before
+             attaching the sign. 
 
 Using Kits : To use a kit, set the first line to [Supply] as usual, then put "kit:" followed by the kit name
              on the second line, ie. "kit:wool". 

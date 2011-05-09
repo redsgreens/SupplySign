@@ -25,14 +25,24 @@ public class SupplySignPlayerListener extends PlayerListener {
 
 		Block block = event.getClickedBlock();
 
-		if (block.getType() != Material.WALL_SIGN && block.getType() != Material.SIGN_POST && block.getType() != Material.CHEST)
+		if (block.getType() != Material.WALL_SIGN && block.getType() != Material.SIGN_POST && block.getType() != Material.CHEST && block.getType() != Material.DISPENSER)
 			return;
 		
 		Sign sign;
 		if(block.getType() == Material.CHEST){
 			sign = SupplySign.getAttachedSign(block);
 			if(sign == null) return;
-		} 
+		}
+		else if(block.getType() == Material.DISPENSER){
+			sign = SupplySign.getAttachedSign(block);
+			if(sign == null) return;
+			else
+			{ // prevent opening inventory of a dispenser with a supplysign attached
+				event.setCancelled(true);
+				event.getPlayer().sendMessage("Error: SupplySign attached, inventory unavailable.");
+				return;
+			}
+		}
 		else 
 			sign = new CraftSign(block);
 
