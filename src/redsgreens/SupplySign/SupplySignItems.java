@@ -1,6 +1,7 @@
 package redsgreens.SupplySign;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -8,11 +9,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import net.minecraft.server.IInventory;
 import net.minecraft.server.InventoryPlayer;
 
+import org.bukkit.Material;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.craftbukkit.inventory.CraftInventoryPlayer;
 import org.bukkit.entity.Player;
@@ -22,7 +25,7 @@ public class SupplySignItems {
 
 	private final SupplySign Plugin;	
 
-	private static Map<String, ItemStack> ItemsMap = new HashMap<String, ItemStack>();
+	private static Map<String, SupplySignItemStack> ItemsMap = new HashMap<String, SupplySignItemStack>();
 
 	public SupplySignItems(final SupplySign plugin)
 	{
@@ -30,13 +33,173 @@ public class SupplySignItems {
 	}
 
     // read items.csv file
-	public void loadItems() throws IOException
+	public void loadItems()
+	{
+		try {
+			loadBaseItems();
+			loadCustomItems();
+			loadLegacyItems();
+		} catch (IOException e) {}
+		
+		System.out.println("SupplySign loaded " + ItemsMap.size() + " items.");
+	}
+
+	private void loadLegacyItems() throws IOException
+	{
+		File legacyFile = new File(Plugin.getDataFolder(), "items.csv");
+		if (!legacyFile.exists())
+			return;
+
+		Map<String, SupplySignItemStack> legacyMap = new HashMap<String, SupplySignItemStack>();
+		
+		BufferedReader rx = new BufferedReader(new FileReader(legacyFile));
+		try
+		{
+
+			for (int i = 0; rx.ready(); i++)
+			{
+				try
+				{
+					String line = rx.readLine().trim().toLowerCase();
+					if (line.startsWith("#")) continue;
+
+					String[] parts = line.split(",");
+					
+					String itemName = parts[0];
+					int itemID = Integer.parseInt(parts[1]);
+					Short itemDamage = Short.parseShort(parts[2]);
+					int itemStackSize = Integer.parseInt(parts[3]);
+					
+					SupplySignItemStack stack = new SupplySignItemStack(Material.getMaterial(itemID), itemDamage, itemStackSize);
+
+					if(ItemsMap.containsKey(itemName))
+					{
+						SupplySignItemStack stack2 = ItemsMap.get(itemName);
+						
+						if(stack.getMaterial() != stack2.getMaterial() || stack.getDurability() != stack2.getDurability() || stack.getAmount() != stack2.getAmount())
+						{
+							ItemsMap.remove(itemName);
+							ItemsMap.put(itemName, stack);
+							legacyMap.put(itemName, stack);
+						}
+						
+					}
+					else
+					{
+						ItemsMap.put(itemName, stack);
+						legacyMap.put(itemName, stack);
+					}
+					
+				}
+				catch (Exception ex)
+				{
+					Plugin.logger.warning("Error parsing items.csv on line " + i + ". " + ex.getMessage());
+				}
+			}
+		}
+		finally
+		{
+			rx.close();
+		}
+
+		if(legacyMap.size() != 0)
+		{
+			File customFile = new File(Plugin.getDataFolder(), "items-custom.csv");
+			BufferedWriter bw = new BufferedWriter(new FileWriter(customFile, true));
+			Iterator<String> i = legacyMap.keySet().iterator();
+			
+			
+			try {
+				while (i.hasNext()) {
+					String itemName = i.next();
+					if(!itemName.equalsIgnoreCase("rfish") && !itemName.equalsIgnoreCase("cmcart") && !itemName.equalsIgnoreCase("slab") && !itemName.equalsIgnoreCase("redrose") && !itemName.equalsIgnoreCase("step") && !itemName.equalsIgnoreCase("17.1") && !itemName.equalsIgnoreCase("17.2") && !itemName.equalsIgnoreCase("manyarrow"))
+					{
+						SupplySignItemStack stack = legacyMap.get(itemName);
+						bw.write(itemName + "," + stack.getMaterial().getId() + ","
+								+ stack.getDurability() + "," + stack.getAmount());
+						bw.newLine();
+					}
+				}
+				bw.flush();
+			} 
+			finally {
+				bw.close();
+			}
+			
+
+
+		}
+
+		legacyFile.renameTo(new File(Plugin.getDataFolder(), "items.csv.old"));
+
+	}
+
+	private void loadCustomItems() throws IOException
 	{
 		// create the file from the one in the jar if it doesn't exist on disk
-		File itemsFile = new File(Plugin.getDataFolder(), "items.csv");
+		File itemsFile = new File(Plugin.getDataFolder(), "items-custom.csv");
+		if (!itemsFile.exists())
+		{
+			itemsFile.createNewFile();
+			InputStream res = SupplySign.class.getResourceAsStream("/items-custom.csv");
+			
+			FileWriter tx = new FileWriter(itemsFile);
+			for (int i = 0; (i = res.read()) > 0;) tx.write(i);
+			tx.flush();
+			tx.close();
+			res.close();
+
+			return;
+		}
+
+		BufferedReader rx = new BufferedReader(new FileReader(itemsFile));
+		try
+		{
+
+			for (int i = 0; rx.ready(); i++)
+			{
+				try
+				{
+					String line = rx.readLine().trim().toLowerCase();
+					if (line.startsWith("#")) continue;
+
+					String[] parts = line.split(",");
+					
+					String itemName = parts[0];
+					int itemID = Integer.parseInt(parts[1]);
+					Short itemDamage = Short.parseShort(parts[2]);
+					int itemStackSize = Integer.parseInt(parts[3]);
+					
+					SupplySignItemStack stack = new SupplySignItemStack(Material.getMaterial(itemID), itemDamage, itemStackSize);
+
+					if(ItemsMap.containsKey(itemName))
+						ItemsMap.remove(itemName);
+					
+					ItemsMap.put(itemName, stack);
+					
+				}
+				catch (Exception ex)
+				{
+					Plugin.logger.warning("Error parsing items-custom.csv on line " + i + ". " + ex.getMessage());
+				}
+			}
+		}
+		finally
+		{
+			rx.close();
+		}
+
+		
+	}
+
+	private void loadBaseItems() throws IOException
+	{
+		// create the file from the one in the jar if it doesn't exist on disk
+		File itemsFile = new File(Plugin.getDataFolder(), "items-base.csv");
 		if (!itemsFile.exists()){
 			itemsFile.createNewFile();
 			InputStream res = SupplySign.class.getResourceAsStream("/items.csv");
+			
 			FileWriter tx = new FileWriter(itemsFile);
 			for (int i = 0; (i = res.read()) > 0;) tx.write(i);
 			tx.flush();
@@ -44,7 +207,7 @@ public class SupplySignItems {
 			res.close();
 		}
 		
-		ItemsMap = new HashMap<String, ItemStack>();
+		ItemsMap = new HashMap<String, SupplySignItemStack>();
 		ItemsMap.clear();
 		BufferedReader rx = new BufferedReader(new FileReader(itemsFile));
 		try
@@ -61,17 +224,17 @@ public class SupplySignItems {
 					
 					String itemName = parts[0];
 					int itemID = Integer.parseInt(parts[1]);
-					Byte itemDamage = Byte.parseByte(parts[2]);
+					Short itemDamage = Short.parseShort(parts[2]);
 					int itemStackSize = Integer.parseInt(parts[3]);
 					
-					ItemStack stack = new ItemStack(itemID, itemStackSize, itemDamage);
+					SupplySignItemStack stack = new SupplySignItemStack(Material.getMaterial(itemID), itemDamage, itemStackSize);
 					
 					ItemsMap.put(itemName, stack);
 					
 				}
 				catch (Exception ex)
 				{
-					Plugin.logger.warning("Error parsing items.csv on line " + i + ". " + ex.getMessage());
+					Plugin.logger.warning("Error parsing items-base.csv on line " + i + ". " + ex.getMessage());
 				}
 			}
 		}
@@ -79,16 +242,14 @@ public class SupplySignItems {
 		{
 			rx.close();
 		}
-		
-		System.out.println("SupplySign loaded " + ItemsMap.size() + " items from items.csv.");
 
 	}
-
+	
 	// return an ItemStack from by name
 	public ItemStack getItem(String id) throws Exception
 	{
 		if (ItemsMap.containsKey(id)){
-			ItemStack is = ItemsMap.get(id);
+			ItemStack is = ItemsMap.get(id).getItemStack();
 			return is;
 		}
 		throw new Exception("Unknown item name: " + id);

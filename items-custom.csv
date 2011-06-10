@@ -1,0 +1,3 @@
+#Place your custom items in this file, using the format below
+#You can override entries in the items-base.csv file by naming them the same
+#ItemName,ID,Damage,StackSize
