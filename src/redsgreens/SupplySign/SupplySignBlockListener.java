@@ -1,5 +1,7 @@
 package redsgreens.SupplySign;
 
+import java.util.ArrayList;
+
 import org.bukkit.Material;
 import org.bukkit.event.block.BlockListener;
 
@@ -7,6 +9,7 @@ import org.bukkit.block.*;
 import org.bukkit.craftbukkit.block.CraftDispenser;
 import org.bukkit.craftbukkit.block.CraftSign;
 import org.bukkit.event.block.*;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -15,7 +18,12 @@ import org.bukkit.inventory.ItemStack;
  */
 public class SupplySignBlockListener extends BlockListener {
 
-    public SupplySignBlockListener(final SupplySign plugin) {}
+	private final SupplySign Plugin;
+	
+    public SupplySignBlockListener(final SupplySign plugin) 
+    { 
+    	Plugin = plugin;
+    }
 
 	@Override
 	public void onBlockPlace(BlockPlaceEvent event) 
@@ -44,17 +52,17 @@ public class SupplySignBlockListener extends BlockListener {
 		if(event.getBlock().getType() == Material.WALL_SIGN || event.getBlock().getType() == Material.SIGN_POST)
 		{
 			Sign sign = new CraftSign(event.getBlock());
-			if (sign.getLine(0).equals("§1[Supply]") && !SupplySign.isAuthorized(event.getPlayer(), "destroy")){
+			if (sign.getLine(0).equals("§1[Supply]") && !Plugin.isAuthorized(event.getPlayer(), "destroy")){
 				event.setCancelled(true);
 				return;
 			}
 		}
 		else if (event.getBlock().getType() == Material.CHEST || event.getBlock().getType() == Material.DISPENSER)
 		{
-			Sign sign = SupplySign.getAttachedSign(event.getBlock());
+			Sign sign = SupplySignUtil.getAttachedSign(event.getBlock());
 			if(sign != null)
 			{
-				if(!SupplySign.isAuthorized(event.getPlayer(), "destroy")){
+				if(!Plugin.isAuthorized(event.getPlayer(), "destroy")){
 					event.setCancelled(true);
 					return;
 				}
@@ -73,7 +81,7 @@ public class SupplySignBlockListener extends BlockListener {
 
 		Block signBlock = event.getBlock();
 
-		if(!SupplySign.getConfigFixSignOnSignGlitch().equalsIgnoreCase("Disabled")){
+		if(Plugin.Config.FixSignOnSignGlitch != SupplySignOnSign.Disabled){
 			// delete this sign if it's against another sign
 			Block blockAgainst = null;
 
@@ -82,7 +90,7 @@ public class SupplySignBlockListener extends BlockListener {
 					blockAgainst = signBlock.getFace(BlockFace.DOWN);
 			}
 			else if(signBlock.getType() == Material.WALL_SIGN)
-				blockAgainst = SupplySign.getBlockBehindWallSign(new CraftSign(signBlock));
+				blockAgainst = SupplySignUtil.getBlockBehindWallSign(new CraftSign(signBlock));
 				
 			if(blockAgainst != null){
 				if(blockAgainst.getType() == Material.SIGN_POST || blockAgainst.getType() == Material.WALL_SIGN){
@@ -90,7 +98,7 @@ public class SupplySignBlockListener extends BlockListener {
 					Sign signAgainst = new CraftSign(blockAgainst);
 					
 					// check the config file to make sure the sign should be deleted
-					if((SupplySign.getConfigFixSignOnSignGlitch().equalsIgnoreCase("SupplySignOnly") && signAgainst.getLine(0).equals("§1[Supply]")) || SupplySign.getConfigFixSignOnSignGlitch().equalsIgnoreCase("Global")){
+					if((Plugin.Config.FixSignOnSignGlitch == SupplySignOnSign.SupplySignOnly && signAgainst.getLine(0).equals("§1[Supply]")) || Plugin.Config.FixSignOnSignGlitch == SupplySignOnSign.Global){
 						signBlock.setType(Material.AIR);
 						ItemStack signStack = new ItemStack(Material.SIGN, 1);
 						event.getPlayer().setItemInHand(signStack);
@@ -107,39 +115,39 @@ public class SupplySignBlockListener extends BlockListener {
 			if (event.getLine(0).equalsIgnoreCase("[Supply]"))
 			{
 				// and they have create permission
-				if (SupplySign.isAuthorized(event.getPlayer(), "create")){
+				if (Plugin.isAuthorized(event.getPlayer(), "create")){
 					
 					// they are allowed, so set the first line to blue
 					event.setLine(0, "§1[Supply]");
 
 					// if there is a chest nearby, then create a wallsign against it
-					if(SupplySign.isValidChest(signBlock.getFace(BlockFace.NORTH)) ||
-							SupplySign.isValidChest(signBlock.getFace(BlockFace.EAST)) ||
-							SupplySign.isValidChest(signBlock.getFace(BlockFace.SOUTH)) ||
-							SupplySign.isValidChest(signBlock.getFace(BlockFace.WEST))){
+					if(SupplySignUtil.isValidChest(signBlock.getFace(BlockFace.NORTH)) ||
+							SupplySignUtil.isValidChest(signBlock.getFace(BlockFace.EAST)) ||
+							SupplySignUtil.isValidChest(signBlock.getFace(BlockFace.SOUTH)) ||
+							SupplySignUtil.isValidChest(signBlock.getFace(BlockFace.WEST))){
 
 						String[] lines = event.getLines();
 
 						signBlock.setType(Material.WALL_SIGN);
 						Sign sign = new CraftSign(signBlock);
 						
-						if(SupplySign.isValidChest(signBlock.getFace(BlockFace.NORTH)))
+						if(SupplySignUtil.isValidChest(signBlock.getFace(BlockFace.NORTH)))
 							signBlock.setData((byte)5);
-						else if(SupplySign.isValidChest(signBlock.getFace(BlockFace.EAST)))
+						else if(SupplySignUtil.isValidChest(signBlock.getFace(BlockFace.EAST)))
 							signBlock.setData((byte)3);
-						else if(SupplySign.isValidChest(signBlock.getFace(BlockFace.SOUTH)))
+						else if(SupplySignUtil.isValidChest(signBlock.getFace(BlockFace.SOUTH)))
 							signBlock.setData((byte)4);
-						else if(SupplySign.isValidChest(signBlock.getFace(BlockFace.WEST)))
+						else if(SupplySignUtil.isValidChest(signBlock.getFace(BlockFace.WEST)))
 							signBlock.setData((byte)2);
 
 						for(int i=0; i<lines.length; i++)
 							sign.setLine(i, lines[i]);
 					}
 					// if it's a dispenser, put the sign there
-					else if(SupplySign.isValidDispenser(signBlock.getFace(BlockFace.NORTH)) ||
-							SupplySign.isValidDispenser(signBlock.getFace(BlockFace.EAST)) ||
-							SupplySign.isValidDispenser(signBlock.getFace(BlockFace.SOUTH)) ||
-							SupplySign.isValidDispenser(signBlock.getFace(BlockFace.WEST))){
+					else if(SupplySignUtil.isValidDispenser(signBlock.getFace(BlockFace.NORTH)) ||
+							SupplySignUtil.isValidDispenser(signBlock.getFace(BlockFace.EAST)) ||
+							SupplySignUtil.isValidDispenser(signBlock.getFace(BlockFace.SOUTH)) ||
+							SupplySignUtil.isValidDispenser(signBlock.getFace(BlockFace.WEST))){
 
 						String[] lines = event.getLines();
 
@@ -147,19 +155,19 @@ public class SupplySignBlockListener extends BlockListener {
 						Sign sign = new CraftSign(signBlock);
 						Dispenser dispenser = null;
 						
-						if(SupplySign.isValidDispenser(signBlock.getFace(BlockFace.NORTH))){
+						if(SupplySignUtil.isValidDispenser(signBlock.getFace(BlockFace.NORTH))){
 							signBlock.setData((byte)5);
 							dispenser = new CraftDispenser(signBlock.getFace(BlockFace.NORTH));
 						}
-						else if(SupplySign.isValidDispenser(signBlock.getFace(BlockFace.EAST))){
+						else if(SupplySignUtil.isValidDispenser(signBlock.getFace(BlockFace.EAST))){
 							signBlock.setData((byte)3);
 							dispenser = new CraftDispenser(signBlock.getFace(BlockFace.EAST));
 						}
-						else if(SupplySign.isValidDispenser(signBlock.getFace(BlockFace.SOUTH))){
+						else if(SupplySignUtil.isValidDispenser(signBlock.getFace(BlockFace.SOUTH))){
 							signBlock.setData((byte)4);
 							dispenser = new CraftDispenser(signBlock.getFace(BlockFace.SOUTH));
 						}
-						else if(SupplySign.isValidDispenser(signBlock.getFace(BlockFace.WEST))){
+						else if(SupplySignUtil.isValidDispenser(signBlock.getFace(BlockFace.WEST))){
 							signBlock.setData((byte)2);
 							dispenser = new CraftDispenser(signBlock.getFace(BlockFace.WEST));
 						}
@@ -167,7 +175,7 @@ public class SupplySignBlockListener extends BlockListener {
 						for(int i=0; i<lines.length; i++)
 							sign.setLine(i, lines[i]);
 						
-						SupplySign.fillDispenser(dispenser, sign);
+						fillDispenser(dispenser, sign);
 					}
  
 
@@ -182,7 +190,7 @@ public class SupplySignBlockListener extends BlockListener {
 		}
 		catch (Throwable ex)
 		{
-			if(SupplySign.getConfigShowErrorsInClient())
+			if(Plugin.Config.ShowErrorsInClient)
 				event.getPlayer().sendMessage("§cErr: " + ex.getMessage());
 		}
 	}
@@ -194,9 +202,44 @@ public class SupplySignBlockListener extends BlockListener {
 			return;
 		
 		Dispenser d = new CraftDispenser(event.getBlock());
-		Sign s = SupplySign.getAttachedSign(event.getBlock());
+		Sign s = SupplySignUtil.getAttachedSign(event.getBlock());
 
 		if(s != null)
-			SupplySign.fillDispenser(d, s);
+			fillDispenser(d, s);
+	}
+	
+	private void fillDispenser(Dispenser dispenser, Sign sign){
+		try{
+			ArrayList<Object> itemList = new ArrayList<Object>();
+			
+			// test to see if it's a kit
+			if(sign.getLine(1).trim().contains("kit:")){
+				String[] split = sign.getLine(1).trim().split(":");
+				itemList = Plugin.Kits.getKit(split[1]);
+			}
+			else
+			{
+				// it's not a kit, so load the items from the lines on the sign
+				if(!sign.getLine(1).trim().equalsIgnoreCase(""))
+					itemList.add(sign.getLine(1).trim());
+				if(!sign.getLine(2).trim().equalsIgnoreCase(""))
+					itemList.add(sign.getLine(2).trim());
+				if(!sign.getLine(3).trim().equalsIgnoreCase(""))
+					itemList.add(sign.getLine(3).trim());
+			}
+
+			// if any valid items were found, fill the inventory with first item in itemList
+			if(itemList.size() > 0)
+			{
+				Inventory inv = dispenser.getInventory();
+
+				for(int x=0; x < inv.getSize(); x++){
+					inv.clear(x);
+					inv.setItem(x, Plugin.Items.getItem(itemList.get(0).toString()));
+				}
+			}
+		}
+		catch(Exception ex){}
+		
 	}
 }

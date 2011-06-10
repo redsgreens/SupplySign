@@ -14,7 +14,12 @@ import org.bukkit.event.player.*;
  */
 public class SupplySignPlayerListener extends PlayerListener {
 
-    public SupplySignPlayerListener(SupplySign instance) { }
+	private final SupplySign Plugin;
+	
+    public SupplySignPlayerListener(SupplySign plugin) 
+    {
+    	Plugin = plugin;
+    }
 
     @Override
     public void onPlayerInteract(PlayerInteractEvent event)
@@ -30,16 +35,16 @@ public class SupplySignPlayerListener extends PlayerListener {
 		
 		Sign sign;
 		if(block.getType() == Material.CHEST){
-			sign = SupplySign.getAttachedSign(block);
+			sign = SupplySignUtil.getAttachedSign(block);
 			if(sign == null) return;
 		}
 		else if(block.getType() == Material.DISPENSER){
-			sign = SupplySign.getAttachedSign(block);
+			sign = SupplySignUtil.getAttachedSign(block);
 			if(sign == null) return;
 			else
 			{ // prevent opening inventory of a dispenser with a supplysign attached
 				event.setCancelled(true);
-				if(SupplySign.getConfigShowErrorsInClient())
+				if(Plugin.Config.ShowErrorsInClient)
 					event.getPlayer().sendMessage("§cErr: SupplySign attached to dispenser, inventory unavailable.");
 				return;
 			}
@@ -55,9 +60,9 @@ public class SupplySignPlayerListener extends PlayerListener {
 				// if it's a dispenser cancel right click on sign
 				if(sign.getBlock().getType() == Material.WALL_SIGN)
 				{
-					if(SupplySign.getBlockBehindWallSign(sign).getType() == Material.DISPENSER)
+					if(SupplySignUtil.getBlockBehindWallSign(sign).getType() == Material.DISPENSER)
 					{
-						if(SupplySign.getConfigShowErrorsInClient())
+						if(Plugin.Config.ShowErrorsInClient)
 							event.getPlayer().sendMessage("§cErr: SupplySign attached to dispenser, inventory unavailable.");
 						return;
 					}
@@ -69,14 +74,14 @@ public class SupplySignPlayerListener extends PlayerListener {
 				if(sign.getLine(1).trim().contains("kit:")){
 					String[] split = sign.getLine(1).trim().split(":");
 					
-					if(SupplySign.isAuthorized(event.getPlayer(), "access") || SupplySign.isAuthorized(event.getPlayer(), "access." + split[1]))
-						itemList = SupplySign.getKit(split[1]);
-					else if(SupplySign.getConfigShowErrorsInClient())
+					if(Plugin.isAuthorized(event.getPlayer(), "access") || Plugin.isAuthorized(event.getPlayer(), "access." + split[1]))
+						itemList = Plugin.Kits.getKit(split[1]);
+					else if(Plugin.Config.ShowErrorsInClient)
 						event.getPlayer().sendMessage("§cErr: you don't have permission to access this SupplySign.");
 				}
 				else
 				{
-					if(SupplySign.isAuthorized(event.getPlayer(), "access"))
+					if(Plugin.isAuthorized(event.getPlayer(), "access"))
 					{
 						// it's not a kit, so load the items from the lines on the sign
 						if(!sign.getLine(1).trim().equalsIgnoreCase(""))
@@ -87,19 +92,19 @@ public class SupplySignPlayerListener extends PlayerListener {
 							itemList.add(sign.getLine(3).trim());
 
 					}
-					else if(SupplySign.getConfigShowErrorsInClient())
+					else if(Plugin.Config.ShowErrorsInClient)
 						event.getPlayer().sendMessage("§cErr: you don't have permission to access this SupplySign.");
 				}
 				
 				if(itemList.size() > 0)
-					SupplySign.showInventory(event.getPlayer(), itemList);
+					Plugin.Items.showInventory(event.getPlayer(), itemList);
 				
 				return;
 			}
 		}
 		catch (Throwable ex)
 		{
-			if(SupplySign.getConfigShowErrorsInClient())
+			if(Plugin.Config.ShowErrorsInClient)
 				event.getPlayer().sendMessage("§cErr: " + ex.getMessage());
 		}
     }

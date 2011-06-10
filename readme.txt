@@ -1,4 +1,4 @@
-Plugin Name: SupplySign 1.5 by redsgreens
+Plugin Name: SupplySign 1.6 by redsgreens
 
 URL        : http://forums.bukkit.org/threads/7938/
 

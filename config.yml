@@ -1,5 +1,4 @@
 #
-# 
 # ShowErrorsInClient: toggle that determines if permissions or other error messages
 #                     are displayed client-side
 #
@@ -9,6 +8,14 @@
 ShowErrorsInClient: Yes
 
 #
+# AllowNonOpAccess: if there is no permissions plugin loaded, then this setting 
+#                   allows users without op status to access signs
+#
+# Allowed values are: Yes
+#                     No
+#
+AllowNonOpAccess: No
+
 #
 # FixSignOnSignGlitch: this setting fixes the glitch where a player can place a sign 
 #                      on another sign
