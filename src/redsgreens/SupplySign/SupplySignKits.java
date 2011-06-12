@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Set;
 
 import org.yaml.snakeyaml.Yaml;
@@ -41,10 +42,10 @@ public class SupplySignKits {
 		BufferedReader rx = new BufferedReader(new FileReader(kitsFile));
 		Yaml yaml = new Yaml();
 		
-		KitsMap.clear();
+		HashMap<String,ArrayList<Object>> tmpMap = new HashMap<String,ArrayList<Object>>();
 		
 		try{
-			KitsMap = (HashMap<String,ArrayList<Object>>)yaml.load(rx);
+			tmpMap = (HashMap<String,ArrayList<Object>>)yaml.load(rx);
 		}
 		finally
 		{
@@ -52,11 +53,21 @@ public class SupplySignKits {
 		}
 		
 		// test for a blank or broken kits file
-		if(KitsMap == null){
+		if(tmpMap == null){
 			KitsMap = new HashMap<String,ArrayList<Object>>();
 			ArrayList<Object> al = new ArrayList<Object>();
 			al.add("null");
 			KitsMap.put("null", al);
+		}
+		else
+		{
+			KitsMap.clear();
+			Iterator<String> itr = tmpMap.keySet().iterator();
+			while(itr.hasNext())
+			{
+				String k = itr.next();
+				KitsMap.put(k.toLowerCase(), tmpMap.get(k));
+			}
 		}
 
 		System.out.println("SupplySign loaded " + KitsMap.size() + " kits from kits.yml.");
@@ -64,8 +75,9 @@ public class SupplySignKits {
 
 	// return a kit by name
 	public ArrayList<Object> getKit(String kit) throws Exception{
-		if (KitsMap.containsKey(kit)){
-			ArrayList<Object> al = KitsMap.get(kit);
+		String k = kit.toLowerCase();
+		if (KitsMap.containsKey(k)){
+			ArrayList<Object> al = KitsMap.get(k);
 			return al;
 		}
 		throw new Exception("Unknown kit name: " + kit);

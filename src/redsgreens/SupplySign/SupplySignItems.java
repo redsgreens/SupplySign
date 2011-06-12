@@ -65,7 +65,7 @@ public class SupplySignItems {
 
 					String[] parts = line.split(",");
 					
-					String itemName = parts[0];
+					String itemName = parts[0].toLowerCase();
 					int itemID = Integer.parseInt(parts[1]);
 					Short itemDamage = Short.parseShort(parts[2]);
 					int itemStackSize = Integer.parseInt(parts[3]);
@@ -111,7 +111,7 @@ public class SupplySignItems {
 			
 			try {
 				while (i.hasNext()) {
-					String itemName = i.next();
+					String itemName = i.next().toLowerCase();
 					if(!itemName.equalsIgnoreCase("rfish") && !itemName.equalsIgnoreCase("cmcart") && !itemName.equalsIgnoreCase("slab") && !itemName.equalsIgnoreCase("redrose") && !itemName.equalsIgnoreCase("step") && !itemName.equalsIgnoreCase("17.1") && !itemName.equalsIgnoreCase("17.2") && !itemName.equalsIgnoreCase("manyarrow"))
 					{
 						SupplySignItemStack stack = legacyMap.get(itemName);
@@ -165,7 +165,7 @@ public class SupplySignItems {
 
 					String[] parts = line.split(",");
 					
-					String itemName = parts[0];
+					String itemName = parts[0].toLowerCase();
 					int itemID = Integer.parseInt(parts[1]);
 					Short itemDamage = Short.parseShort(parts[2]);
 					int itemStackSize = Integer.parseInt(parts[3]);
@@ -224,7 +224,7 @@ public class SupplySignItems {
 
 					String[] parts = line.split(",");
 					
-					String itemName = parts[0];
+					String itemName = parts[0].toLowerCase();
 					int itemID = Integer.parseInt(parts[1]);
 					Short itemDamage = Short.parseShort(parts[2]);
 					int itemStackSize = Integer.parseInt(parts[3]);
@@ -250,8 +250,9 @@ public class SupplySignItems {
 	// return an ItemStack from by name
 	public ItemStack getItem(String id) throws Exception
 	{
-		if (ItemsMap.containsKey(id)){
-			ItemStack is = ItemsMap.get(id).getItemStack();
+		String id2 = id.toLowerCase();
+		if (ItemsMap.containsKey(id2)){
+			ItemStack is = ItemsMap.get(id2).getItemStack();
 			return is;
 		}
 		throw new Exception("Unknown item name: " + id);
