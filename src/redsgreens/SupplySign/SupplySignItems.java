@@ -200,11 +200,14 @@ public class SupplySignItems {
 		if (itemsFile.exists())
 			itemsFile.delete();
 
+		itemsFile = new File(Plugin.getDataFolder(), "items-base.csv");
 		itemsFile.createNewFile();
 		InputStream res = SupplySign.class.getResourceAsStream("/items.csv");
-		
+
 		FileWriter tx = new FileWriter(itemsFile);
-		for (int i = 0; (i = res.read()) > 0;) tx.write(i);
+		for (int i = 0; (i = res.read()) > 0;) 
+			tx.write(i);
+		
 		tx.flush();
 		tx.close();
 		res.close();
@@ -270,14 +273,14 @@ public class SupplySignItems {
 			switch(itemList.size()){
 			case 1:
 				for(int i=0; i<36; i++)
-					inv.addItem(getItem(itemList.get(0).toString()));
+					inv.setItem(i, getItem(itemList.get(0).toString()));
 				break;
 
 			case 2:
 				for(int i=0; i<18; i++)
-					inv.addItem(getItem(itemList.get(0).toString()));
+					inv.setItem(i, getItem(itemList.get(0).toString()));
 				for(int i=0; i<18; i++)
-					inv.addItem(getItem(itemList.get(1).toString()));
+					inv.setItem(i+18, getItem(itemList.get(1).toString()));
 				break;
 			
 			case 3:
@@ -319,42 +322,47 @@ public class SupplySignItems {
 				break;
 
 			case 7:
+					int pos1 = 0;
 					for(int i=0; i<7; i++){
 						int jmax;
 						if(i % 2 == 0) jmax = 5;
 						else jmax = 4;
 						
 						for(int j=0; j<jmax; j++)
-							  inv.addItem(getItem(itemList.get(i).toString()));
+							  inv.setItem(pos1++, getItem(itemList.get(i).toString()));
+						
 					}
 				break;
 
 			case 8:
+					int pos2 = 0;
 					for(int i=0; i<4; i++){
-						  inv.addItem(getItem(itemList.get((2*i)).toString()));
-						  inv.addItem(getItem(itemList.get((2*i)).toString()));
-						  inv.addItem(getItem(itemList.get((2*i)).toString()));
-						  inv.addItem(getItem(itemList.get((2*i)).toString()));
-						  inv.addItem(getItem(itemList.get((2*i)+1).toString()));
-						  inv.addItem(getItem(itemList.get((2*i)+1).toString()));
-						  inv.addItem(getItem(itemList.get((2*i)+1).toString()));
-						  inv.addItem(getItem(itemList.get((2*i)+1).toString()));
-						  inv.addItem(getItem(itemList.get((2*i)+1).toString()));
+						  inv.setItem(pos2++, getItem(itemList.get((2*i)).toString()));
+						  inv.setItem(pos2++, getItem(itemList.get((2*i)).toString()));
+						  inv.setItem(pos2++, getItem(itemList.get((2*i)).toString()));
+						  inv.setItem(pos2++, getItem(itemList.get((2*i)).toString()));
+						  inv.setItem(pos2++, getItem(itemList.get((2*i)+1).toString()));
+						  inv.setItem(pos2++, getItem(itemList.get((2*i)+1).toString()));
+						  inv.setItem(pos2++, getItem(itemList.get((2*i)+1).toString()));
+						  inv.setItem(pos2++, getItem(itemList.get((2*i)+1).toString()));
+						  inv.setItem(pos2++, getItem(itemList.get((2*i)+1).toString()));
 					}
 				break;
 
 			case 9:
-				for(int j=0; j<4; j++)
-					for(int i=0; i<9; i++)
-						  inv.addItem(getItem(itemList.get(i).toString()));
+					int pos3 = 0;
+					for(int j=0; j<4; j++)
+						for(int i=0; i<9; i++)
+							  inv.setItem(pos3++, getItem(itemList.get(i).toString()));
 				break;
 				
 			case 10:
 			case 11:
 			case 12:
+				int pos4 = 0;
 					for(int i=0; i<itemList.size(); i++)
 						for(int j=0; j<3; j++)
-							  inv.addItem(getItem(itemList.get(i).toString()));
+							  inv.setItem(pos4++, getItem(itemList.get(i).toString()));
 				break;
 
 			case 13:
@@ -378,7 +386,7 @@ public class SupplySignItems {
 					inv.setItem(i, getItem(itemList.get(i).toString()));
 			}
 		} catch (Exception e) {
-			System.out.println("SupplySign exception: " + e.getMessage());
+			e.printStackTrace();
 		}
 		
 		// show the inventory dialog 

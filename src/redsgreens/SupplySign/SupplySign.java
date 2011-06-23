@@ -50,7 +50,7 @@ public class SupplySign extends JavaPlugin {
 			Kits.loadKits();
 
      	} catch (Exception e) {
-			System.out.println("SupplySign error: " + e.getMessage());
+			e.printStackTrace();
 		}
 
         // Register our events
