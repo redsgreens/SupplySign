@@ -153,4 +153,9 @@ public class SupplySignUtil {
 		return blockAgainst;
 	}
 
+	public static String stripColorCodes(String str)
+	{
+		return str.replaceAll("\u00A7[0-9a-fA-F]", "");
+	}
+
 }

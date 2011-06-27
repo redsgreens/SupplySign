@@ -84,13 +84,15 @@ public class SupplySignPlayerListener extends PlayerListener {
 					if(Plugin.isAuthorized(event.getPlayer(), "access"))
 					{
 						// it's not a kit, so load the items from the lines on the sign
-						if(!sign.getLine(1).trim().equalsIgnoreCase(""))
-							itemList.add(sign.getLine(1).trim());
-						if(!sign.getLine(2).trim().equalsIgnoreCase(""))
-							itemList.add(sign.getLine(2).trim());
-						if(!sign.getLine(3).trim().equalsIgnoreCase(""))
-							itemList.add(sign.getLine(3).trim());
-
+						String line1 = SupplySignUtil.stripColorCodes(sign.getLine(1).trim()); 
+						String line2 = SupplySignUtil.stripColorCodes(sign.getLine(2).trim()); 
+						String line3 = SupplySignUtil.stripColorCodes(sign.getLine(3).trim()); 
+						if(!line1.equalsIgnoreCase(""))
+							itemList.add(line1);
+						if(!line2.equalsIgnoreCase(""))
+							itemList.add(line2);
+						if(!line3.equalsIgnoreCase(""))
+							itemList.add(line3);
 					}
 					else if(Plugin.Config.ShowErrorsInClient)
 						event.getPlayer().sendMessage("§cErr: you don't have permission to access this SupplySign.");

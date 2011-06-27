@@ -75,12 +75,12 @@ public class SupplySignKits {
 
 	// return a kit by name
 	public ArrayList<Object> getKit(String kit) throws Exception{
-		String k = kit.toLowerCase();
+		String k = SupplySignUtil.stripColorCodes(kit.toLowerCase());
 		if (KitsMap.containsKey(k)){
 			ArrayList<Object> al = KitsMap.get(k);
 			return al;
 		}
-		throw new Exception("Unknown kit name: " + kit);
+		throw new Exception("Unknown kit name: " + k);
 	}
 
 	public Set<String> getKitNames()

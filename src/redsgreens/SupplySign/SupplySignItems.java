@@ -253,12 +253,12 @@ public class SupplySignItems {
 	// return an ItemStack from by name
 	public ItemStack getItem(String id) throws Exception
 	{
-		String id2 = id.toLowerCase();
+		String id2 = SupplySignUtil.stripColorCodes(id.toLowerCase());
 		if (ItemsMap.containsKey(id2)){
 			ItemStack is = ItemsMap.get(id2).getItemStack();
 			return is;
 		}
-		throw new Exception("Unknown item name: " + id);
+		throw new Exception("Unknown item name: " + id2);
 	}
 
 	// arranges the items to be displayed and shows the inventory dialog
@@ -268,7 +268,7 @@ public class SupplySignItems {
 		
 		// clear the inventory
 		inv.clear();
-		
+
 		try {
 			switch(itemList.size()){
 			case 1:
