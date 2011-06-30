@@ -6,4 +6,4 @@ commands:
   supplysign:
     description: 'Used to reload data and list available SupplySign kits' 
     usage: '/supplysign <reload | listkits> (Used to reload data and list available SupplySign kits)'
-url: "http://forums.bukkit.org/threads/7938/"
+website: http://forums.bukkit.org/threads/7938/
