@@ -78,54 +78,39 @@ public class SupplySignUtil {
 	public static Sign getAttachedSign(Block b){
 		if((b.getType() != Material.CHEST) && (b.getType() != Material.DISPENSER))
 			return null;
-		
-		if(isSingleChest(b) || (b.getType() == Material.DISPENSER)){
+
+		Block[] adjBlocks;
+
+		if(isSingleChest(b) || (b.getType() == Material.DISPENSER))
 			// it's a single chest or dispenser, so check the four adjacent blocks
-			if(b.getFace(BlockFace.NORTH).getType() == Material.WALL_SIGN)
-				return new CraftSign(b.getFace(BlockFace.NORTH));
-			else if(b.getFace(BlockFace.EAST).getType() == Material.WALL_SIGN)
-				return new CraftSign(b.getFace(BlockFace.EAST));
-			else if(b.getFace(BlockFace.SOUTH).getType() == Material.WALL_SIGN)
-				return new CraftSign(b.getFace(BlockFace.SOUTH));
-			else if(b.getFace(BlockFace.WEST).getType() == Material.WALL_SIGN)
-				return new CraftSign(b.getFace(BlockFace.WEST));
+			adjBlocks = new Block[]{b.getFace(BlockFace.NORTH), b.getFace(BlockFace.EAST), b.getFace(BlockFace.SOUTH), b.getFace(BlockFace.WEST)};
 			
-			// didn't find a sign so return null
-			return null;
-		}
 		else if (isDoubleChest(b)){
-			// it's a double, so check the adjacent faces of this block first
-			if(b.getFace(BlockFace.NORTH).getType() == Material.WALL_SIGN)
-				return new CraftSign(b.getFace(BlockFace.NORTH));
-			else if(b.getFace(BlockFace.EAST).getType() == Material.WALL_SIGN)
-				return new CraftSign(b.getFace(BlockFace.EAST));
-			else if(b.getFace(BlockFace.SOUTH).getType() == Material.WALL_SIGN)
-				return new CraftSign(b.getFace(BlockFace.SOUTH));
-			else if(b.getFace(BlockFace.WEST).getType() == Material.WALL_SIGN)
-				return new CraftSign(b.getFace(BlockFace.WEST));
-
-			// didn't find one, so find the other half of the chest and check it's faces
-			Block[] adjBlocks = new Block[]{b.getFace(BlockFace.NORTH), b.getFace(BlockFace.EAST), b.getFace(BlockFace.SOUTH), b.getFace(BlockFace.WEST)};
-
-			for(int i=0; i<adjBlocks.length; i++)
-				if(adjBlocks[i].getType() == Material.CHEST){
-					if(adjBlocks[i].getFace(BlockFace.NORTH).getType() == Material.WALL_SIGN)
-						return new CraftSign(adjBlocks[i].getFace(BlockFace.NORTH));
-					else if(adjBlocks[i].getFace(BlockFace.EAST).getType() == Material.WALL_SIGN)
-						return new CraftSign(adjBlocks[i].getFace(BlockFace.EAST));
-					else if(adjBlocks[i].getFace(BlockFace.SOUTH).getType() == Material.WALL_SIGN)
-						return new CraftSign(adjBlocks[i].getFace(BlockFace.SOUTH));
-					else if(adjBlocks[i].getFace(BlockFace.WEST).getType() == Material.WALL_SIGN)
-						return new CraftSign(adjBlocks[i].getFace(BlockFace.WEST));
-				}
-
-			// still no attached sign, so return null
-			return null;
+			// it's a double, so find the other half and check faces of both blocks
+			Block b2 = findOtherHalfofChest(b);
+			adjBlocks = new Block[]{b.getFace(BlockFace.NORTH), b.getFace(BlockFace.EAST), b.getFace(BlockFace.SOUTH), b.getFace(BlockFace.WEST), b2.getFace(BlockFace.NORTH), b2.getFace(BlockFace.EAST), b2.getFace(BlockFace.SOUTH), b2.getFace(BlockFace.WEST)};
 		}
 		else
 			return null;
+
+		for(int i=0; i<adjBlocks.length; i++)
+			if(isSupplySign(adjBlocks[i]))
+				return new CraftSign(adjBlocks[i]);
+		
+		return null;
 	}
 
+	public static Block findOtherHalfofChest(Block b)
+	{
+		// didn't find one, so find the other half of the chest and check it's faces
+		Block[] adjBlocks = new Block[]{b.getFace(BlockFace.NORTH), b.getFace(BlockFace.EAST), b.getFace(BlockFace.SOUTH), b.getFace(BlockFace.WEST)};
+		for(int i=0; i<adjBlocks.length; i++)
+			if(adjBlocks[i].getType() == Material.CHEST)
+				return adjBlocks[i]; 
+		
+		return null;
+	}
+	
 	// get the block that has a wall sign on it
 	public static Block getBlockBehindWallSign(Sign sign)
 	{
@@ -158,4 +143,20 @@ public class SupplySignUtil {
 		return str.replaceAll("\u00A7[0-9a-fA-F]", "");
 	}
 
+	public static Boolean isSupplySign(Sign sign)
+	{
+		if(sign.getLine(0).equals("§1[Supply]"))
+			return true;
+		else
+			return false;
+	}
+	
+	public static Boolean isSupplySign(Block b)
+	{
+		if(b.getType() != Material.SIGN && b.getType() != Material.WALL_SIGN)
+			return false;
+		else
+			return isSupplySign(new CraftSign(b));
+
+	}
 }

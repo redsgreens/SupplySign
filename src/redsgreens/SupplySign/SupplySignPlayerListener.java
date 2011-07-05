@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import org.bukkit.Material;
 import org.bukkit.block.*;
 import org.bukkit.craftbukkit.block.CraftSign;
+import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.*;
 
@@ -33,6 +35,8 @@ public class SupplySignPlayerListener extends PlayerListener {
 		if (block.getType() != Material.WALL_SIGN && block.getType() != Material.SIGN_POST && block.getType() != Material.CHEST && block.getType() != Material.DISPENSER)
 			return;
 		
+		Player player = event.getPlayer();
+		
 		Sign sign;
 		if(block.getType() == Material.CHEST){
 			sign = SupplySignUtil.getAttachedSign(block);
@@ -45,7 +49,7 @@ public class SupplySignPlayerListener extends PlayerListener {
 			{ // prevent opening inventory of a dispenser with a supplysign attached
 				event.setCancelled(true);
 				if(Plugin.Config.ShowErrorsInClient)
-					event.getPlayer().sendMessage("§cErr: SupplySign attached to dispenser, inventory unavailable.");
+					player.sendMessage("§cErr: SupplySign attached to dispenser, inventory unavailable.");
 				return;
 			}
 		}
@@ -54,17 +58,25 @@ public class SupplySignPlayerListener extends PlayerListener {
 		
 		try
 		{
-			if (sign.getLine(0).equals("§1[Supply]")){
+			if (SupplySignUtil.isSupplySign(sign)){
 				event.setCancelled(true);
 
-				// if it's a dispenser cancel right click on sign
-				if(sign.getBlock().getType() == Material.WALL_SIGN)
+				if(sign.getBlock().getType() == Material.WALL_SIGN) // special checks for wall signs on chests or dispensers
 				{
-					if(SupplySignUtil.getBlockBehindWallSign(sign).getType() == Material.DISPENSER)
+					Block blockBehindSign = SupplySignUtil.getBlockBehindWallSign(sign); 
+					if(blockBehindSign.getType() == Material.DISPENSER) // if it's a dispenser cancel right click on sign
+
 					{
 						if(Plugin.Config.ShowErrorsInClient)
-							event.getPlayer().sendMessage("§cErr: SupplySign attached to dispenser, inventory unavailable.");
+							player.sendMessage("§cErr: SupplySign attached to dispenser, inventory unavailable.");
 						return;
+					}
+					else if(blockBehindSign.getType() == Material.CHEST && block.getType() == Material.WALL_SIGN) // if it's a chest simulate a click on the chest and return
+					{
+							Event e = new PlayerInteractEvent(player, Action.RIGHT_CLICK_BLOCK, player.getItemInHand(), blockBehindSign, event.getBlockFace());
+							Plugin.getServer().getPluginManager().callEvent(e);
+							event.setCancelled(true);
+							return;
 					}
 				}
 
@@ -74,14 +86,14 @@ public class SupplySignPlayerListener extends PlayerListener {
 				if(sign.getLine(1).trim().contains("kit:")){
 					String[] split = sign.getLine(1).trim().split(":");
 					
-					if(Plugin.isAuthorized(event.getPlayer(), "access") || Plugin.isAuthorized(event.getPlayer(), "access." + split[1]))
+					if(Plugin.isAuthorized(player, "access") || Plugin.isAuthorized(player, "access." + split[1]))
 						itemList = Plugin.Kits.getKit(split[1]);
 					else if(Plugin.Config.ShowErrorsInClient)
-						event.getPlayer().sendMessage("§cErr: you don't have permission to access this SupplySign.");
+						player.sendMessage("§cErr: you don't have permission to access this SupplySign.");
 				}
 				else
 				{
-					if(Plugin.isAuthorized(event.getPlayer(), "access"))
+					if(Plugin.isAuthorized(player, "access"))
 					{
 						// it's not a kit, so load the items from the lines on the sign
 						String line1 = SupplySignUtil.stripColorCodes(sign.getLine(1).trim()); 
@@ -95,11 +107,11 @@ public class SupplySignPlayerListener extends PlayerListener {
 							itemList.add(line3);
 					}
 					else if(Plugin.Config.ShowErrorsInClient)
-						event.getPlayer().sendMessage("§cErr: you don't have permission to access this SupplySign.");
+						player.sendMessage("§cErr: you don't have permission to access this SupplySign.");
 				}
 				
 				if(itemList.size() > 0)
-					Plugin.Items.showInventory(event.getPlayer(), itemList);
+					Plugin.Items.showInventory(player, itemList);
 				
 				return;
 			}
@@ -107,7 +119,7 @@ public class SupplySignPlayerListener extends PlayerListener {
 		catch (Throwable ex)
 		{
 			if(Plugin.Config.ShowErrorsInClient)
-				event.getPlayer().sendMessage("§cErr: " + ex.getMessage());
+				player.sendMessage("§cErr: " + ex.getMessage());
 		}
     }
 }

@@ -55,11 +55,11 @@ public class SupplySign extends JavaPlugin {
 
         // Register our events
         PluginManager pm = getServer().getPluginManager();
-        pm.registerEvent(Type.SIGN_CHANGE, blockListener, Priority.Monitor, this);
-        pm.registerEvent(Type.BLOCK_PLACE, blockListener, Priority.Monitor, this);
-        pm.registerEvent(Type.BLOCK_BREAK, blockListener, Priority.Monitor, this);
+        pm.registerEvent(Type.SIGN_CHANGE, blockListener, Priority.Highest, this);
+        pm.registerEvent(Type.BLOCK_PLACE, blockListener, Priority.Highest, this);
+        pm.registerEvent(Type.BLOCK_BREAK, blockListener, Priority.Highest, this);
         pm.registerEvent(Type.BLOCK_DISPENSE, blockListener, Priority.Monitor, this);
-        pm.registerEvent(Type.PLAYER_INTERACT, playerListener, Priority.Monitor, this);
+        pm.registerEvent(Type.PLAYER_INTERACT, playerListener, Priority.Highest, this);
 
 		// print loaded message
         PluginDescriptionFile pdfFile = this.getDescription();
