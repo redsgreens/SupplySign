@@ -13,7 +13,7 @@ public class SupplySignUtil {
 		if(b.getType() != Material.CHEST)
 			return false;
 
-		Block[] adjBlocks = new Block[]{b.getFace(BlockFace.NORTH), b.getFace(BlockFace.EAST), b.getFace(BlockFace.SOUTH), b.getFace(BlockFace.WEST)};
+		Block[] adjBlocks = new Block[]{b.getRelative(BlockFace.NORTH), b.getRelative(BlockFace.EAST), b.getRelative(BlockFace.SOUTH), b.getRelative(BlockFace.WEST)};
 
 		for(int i=0; i<adjBlocks.length; i++){
 			if(adjBlocks[i].getType() == Material.WALL_SIGN){
@@ -31,7 +31,7 @@ public class SupplySignUtil {
 		if(b.getType() != Material.DISPENSER)
 			return false;
 
-		Block[] adjBlocks = new Block[]{b.getFace(BlockFace.NORTH), b.getFace(BlockFace.EAST), b.getFace(BlockFace.SOUTH), b.getFace(BlockFace.WEST)};
+		Block[] adjBlocks = new Block[]{b.getRelative(BlockFace.NORTH), b.getRelative(BlockFace.EAST), b.getRelative(BlockFace.SOUTH), b.getRelative(BlockFace.WEST)};
 
 		for(int i=0; i<adjBlocks.length; i++){
 			if(adjBlocks[i].getType() == Material.WALL_SIGN){
@@ -50,7 +50,7 @@ public class SupplySignUtil {
 		if(b.getType() != Material.CHEST)
 			return false;
 
-		Block[] adjBlocks = new Block[]{b.getFace(BlockFace.NORTH), b.getFace(BlockFace.EAST), b.getFace(BlockFace.SOUTH), b.getFace(BlockFace.WEST)};
+		Block[] adjBlocks = new Block[]{b.getRelative(BlockFace.NORTH), b.getRelative(BlockFace.EAST), b.getRelative(BlockFace.SOUTH), b.getRelative(BlockFace.WEST)};
 
 		for(int i=0; i<adjBlocks.length; i++)
 			if(adjBlocks[i].getType() == Material.CHEST)
@@ -65,7 +65,7 @@ public class SupplySignUtil {
 		if(b.getType() != Material.CHEST)
 			return false;
 
-		Block[] adjBlocks = new Block[]{b.getFace(BlockFace.NORTH), b.getFace(BlockFace.EAST), b.getFace(BlockFace.SOUTH), b.getFace(BlockFace.WEST)};
+		Block[] adjBlocks = new Block[]{b.getRelative(BlockFace.NORTH), b.getRelative(BlockFace.EAST), b.getRelative(BlockFace.SOUTH), b.getRelative(BlockFace.WEST)};
 
 		for(int i=0; i<adjBlocks.length; i++)
 			if(adjBlocks[i].getType() == Material.CHEST)
@@ -83,12 +83,12 @@ public class SupplySignUtil {
 
 		if(isSingleChest(b) || (b.getType() == Material.DISPENSER))
 			// it's a single chest or dispenser, so check the four adjacent blocks
-			adjBlocks = new Block[]{b.getFace(BlockFace.NORTH), b.getFace(BlockFace.EAST), b.getFace(BlockFace.SOUTH), b.getFace(BlockFace.WEST)};
+			adjBlocks = new Block[]{b.getRelative(BlockFace.NORTH), b.getRelative(BlockFace.EAST), b.getRelative(BlockFace.SOUTH), b.getRelative(BlockFace.WEST)};
 			
 		else if (isDoubleChest(b)){
 			// it's a double, so find the other half and check faces of both blocks
 			Block b2 = findOtherHalfofChest(b);
-			adjBlocks = new Block[]{b.getFace(BlockFace.NORTH), b.getFace(BlockFace.EAST), b.getFace(BlockFace.SOUTH), b.getFace(BlockFace.WEST), b2.getFace(BlockFace.NORTH), b2.getFace(BlockFace.EAST), b2.getFace(BlockFace.SOUTH), b2.getFace(BlockFace.WEST)};
+			adjBlocks = new Block[]{b.getRelative(BlockFace.NORTH), b.getRelative(BlockFace.EAST), b.getRelative(BlockFace.SOUTH), b.getRelative(BlockFace.WEST), b2.getRelative(BlockFace.NORTH), b2.getRelative(BlockFace.EAST), b2.getRelative(BlockFace.SOUTH), b2.getRelative(BlockFace.WEST)};
 		}
 		else
 			return null;
@@ -103,7 +103,7 @@ public class SupplySignUtil {
 	public static Block findOtherHalfofChest(Block b)
 	{
 		// didn't find one, so find the other half of the chest and check it's faces
-		Block[] adjBlocks = new Block[]{b.getFace(BlockFace.NORTH), b.getFace(BlockFace.EAST), b.getFace(BlockFace.SOUTH), b.getFace(BlockFace.WEST)};
+		Block[] adjBlocks = new Block[]{b.getRelative(BlockFace.NORTH), b.getRelative(BlockFace.EAST), b.getRelative(BlockFace.SOUTH), b.getRelative(BlockFace.WEST)};
 		for(int i=0; i<adjBlocks.length; i++)
 			if(adjBlocks[i].getType() == Material.CHEST)
 				return adjBlocks[i]; 
@@ -121,16 +121,16 @@ public class SupplySignUtil {
 		{
 			switch(signBlock.getData()){ // determine sign direction and get block behind it
 			case 2: // facing east
-				blockAgainst = signBlock.getFace(BlockFace.WEST);
+				blockAgainst = signBlock.getRelative(BlockFace.WEST);
 				break;
 			case 3: // facing west
-				blockAgainst = signBlock.getFace(BlockFace.EAST);
+				blockAgainst = signBlock.getRelative(BlockFace.EAST);
 				break;
 			case 4: // facing north
-				blockAgainst = signBlock.getFace(BlockFace.SOUTH);
+				blockAgainst = signBlock.getRelative(BlockFace.SOUTH);
 				break;
 			case 5: // facing south
-				blockAgainst = signBlock.getFace(BlockFace.NORTH);
+				blockAgainst = signBlock.getRelative(BlockFace.NORTH);
 				break;
 			}
 		}

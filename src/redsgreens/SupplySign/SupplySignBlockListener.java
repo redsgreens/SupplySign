@@ -86,8 +86,8 @@ public class SupplySignBlockListener extends BlockListener {
 			Block blockAgainst = null;
 
 			if(signBlock.getType() == Material.SIGN_POST){
-				if(signBlock.getFace(BlockFace.DOWN).getType() == Material.SIGN_POST || signBlock.getFace(BlockFace.DOWN).getType() == Material.WALL_SIGN)
-					blockAgainst = signBlock.getFace(BlockFace.DOWN);
+				if(signBlock.getRelative(BlockFace.DOWN).getType() == Material.SIGN_POST || signBlock.getRelative(BlockFace.DOWN).getType() == Material.WALL_SIGN)
+					blockAgainst = signBlock.getRelative(BlockFace.DOWN);
 			}
 			else if(signBlock.getType() == Material.WALL_SIGN)
 				blockAgainst = SupplySignUtil.getBlockBehindWallSign(new CraftSign(signBlock));
@@ -121,33 +121,33 @@ public class SupplySignBlockListener extends BlockListener {
 					event.setLine(0, "§1[Supply]");
 
 					// if there is a chest nearby, then create a wallsign against it
-					if(SupplySignUtil.isValidChest(signBlock.getFace(BlockFace.NORTH)) ||
-							SupplySignUtil.isValidChest(signBlock.getFace(BlockFace.EAST)) ||
-							SupplySignUtil.isValidChest(signBlock.getFace(BlockFace.SOUTH)) ||
-							SupplySignUtil.isValidChest(signBlock.getFace(BlockFace.WEST))){
+					if(SupplySignUtil.isValidChest(signBlock.getRelative(BlockFace.NORTH)) ||
+							SupplySignUtil.isValidChest(signBlock.getRelative(BlockFace.EAST)) ||
+							SupplySignUtil.isValidChest(signBlock.getRelative(BlockFace.SOUTH)) ||
+							SupplySignUtil.isValidChest(signBlock.getRelative(BlockFace.WEST))){
 
 						String[] lines = event.getLines();
 
 						signBlock.setType(Material.WALL_SIGN);
 						Sign sign = new CraftSign(signBlock);
 						
-						if(SupplySignUtil.isValidChest(signBlock.getFace(BlockFace.NORTH)))
+						if(SupplySignUtil.isValidChest(signBlock.getRelative(BlockFace.NORTH)))
 							signBlock.setData((byte)5);
-						else if(SupplySignUtil.isValidChest(signBlock.getFace(BlockFace.EAST)))
+						else if(SupplySignUtil.isValidChest(signBlock.getRelative(BlockFace.EAST)))
 							signBlock.setData((byte)3);
-						else if(SupplySignUtil.isValidChest(signBlock.getFace(BlockFace.SOUTH)))
+						else if(SupplySignUtil.isValidChest(signBlock.getRelative(BlockFace.SOUTH)))
 							signBlock.setData((byte)4);
-						else if(SupplySignUtil.isValidChest(signBlock.getFace(BlockFace.WEST)))
+						else if(SupplySignUtil.isValidChest(signBlock.getRelative(BlockFace.WEST)))
 							signBlock.setData((byte)2);
 
 						for(int i=0; i<lines.length; i++)
 							sign.setLine(i, lines[i]);
 					}
 					// if it's a dispenser, put the sign there
-					else if(SupplySignUtil.isValidDispenser(signBlock.getFace(BlockFace.NORTH)) ||
-							SupplySignUtil.isValidDispenser(signBlock.getFace(BlockFace.EAST)) ||
-							SupplySignUtil.isValidDispenser(signBlock.getFace(BlockFace.SOUTH)) ||
-							SupplySignUtil.isValidDispenser(signBlock.getFace(BlockFace.WEST))){
+					else if(SupplySignUtil.isValidDispenser(signBlock.getRelative(BlockFace.NORTH)) ||
+							SupplySignUtil.isValidDispenser(signBlock.getRelative(BlockFace.EAST)) ||
+							SupplySignUtil.isValidDispenser(signBlock.getRelative(BlockFace.SOUTH)) ||
+							SupplySignUtil.isValidDispenser(signBlock.getRelative(BlockFace.WEST))){
 
 						String[] lines = event.getLines();
 
@@ -155,21 +155,21 @@ public class SupplySignBlockListener extends BlockListener {
 						Sign sign = new CraftSign(signBlock);
 						Dispenser dispenser = null;
 						
-						if(SupplySignUtil.isValidDispenser(signBlock.getFace(BlockFace.NORTH))){
+						if(SupplySignUtil.isValidDispenser(signBlock.getRelative(BlockFace.NORTH))){
 							signBlock.setData((byte)5);
-							dispenser = new CraftDispenser(signBlock.getFace(BlockFace.NORTH));
+							dispenser = new CraftDispenser(signBlock.getRelative(BlockFace.NORTH));
 						}
-						else if(SupplySignUtil.isValidDispenser(signBlock.getFace(BlockFace.EAST))){
+						else if(SupplySignUtil.isValidDispenser(signBlock.getRelative(BlockFace.EAST))){
 							signBlock.setData((byte)3);
-							dispenser = new CraftDispenser(signBlock.getFace(BlockFace.EAST));
+							dispenser = new CraftDispenser(signBlock.getRelative(BlockFace.EAST));
 						}
-						else if(SupplySignUtil.isValidDispenser(signBlock.getFace(BlockFace.SOUTH))){
+						else if(SupplySignUtil.isValidDispenser(signBlock.getRelative(BlockFace.SOUTH))){
 							signBlock.setData((byte)4);
-							dispenser = new CraftDispenser(signBlock.getFace(BlockFace.SOUTH));
+							dispenser = new CraftDispenser(signBlock.getRelative(BlockFace.SOUTH));
 						}
-						else if(SupplySignUtil.isValidDispenser(signBlock.getFace(BlockFace.WEST))){
+						else if(SupplySignUtil.isValidDispenser(signBlock.getRelative(BlockFace.WEST))){
 							signBlock.setData((byte)2);
-							dispenser = new CraftDispenser(signBlock.getFace(BlockFace.WEST));
+							dispenser = new CraftDispenser(signBlock.getRelative(BlockFace.WEST));
 						}
 
 						for(int i=0; i<lines.length; i++)

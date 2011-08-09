@@ -112,7 +112,7 @@ public class SupplySignItems {
 			try {
 				while (i.hasNext()) {
 					String itemName = i.next().toLowerCase();
-					if(!itemName.equalsIgnoreCase("rfish") && !itemName.equalsIgnoreCase("cmcart") && !itemName.equalsIgnoreCase("slab") && !itemName.equalsIgnoreCase("redrose") && !itemName.equalsIgnoreCase("step") && !itemName.equalsIgnoreCase("17.1") && !itemName.equalsIgnoreCase("17.2") && !itemName.equalsIgnoreCase("manyarrow"))
+					if(!itemName.equalsIgnoreCase("rfish") && !itemName.equalsIgnoreCase("cmcart") && !itemName.equalsIgnoreCase("slab") && !itemName.equalsIgnoreCase("redrose") && !itemName.equalsIgnoreCase("step") && !itemName.equalsIgnoreCase("17.1") && !itemName.equalsIgnoreCase("17.2") && !itemName.equalsIgnoreCase("manyarrow") && !itemName.equalsIgnoreCase("air"))
 					{
 						SupplySignItemStack stack = legacyMap.get(itemName);
 						bw.write(itemName + "," + stack.getMaterial().getId() + ","
@@ -169,14 +169,16 @@ public class SupplySignItems {
 					int itemID = Integer.parseInt(parts[1]);
 					Short itemDamage = Short.parseShort(parts[2]);
 					int itemStackSize = Integer.parseInt(parts[3]);
-					
-					SupplySignItemStack stack = new SupplySignItemStack(Material.getMaterial(itemID), itemDamage, itemStackSize);
 
-					if(ItemsMap.containsKey(itemName))
-						ItemsMap.remove(itemName);
-					
-					ItemsMap.put(itemName, stack);
-					
+					if(itemID > 0)
+					{
+						SupplySignItemStack stack = new SupplySignItemStack(Material.getMaterial(itemID), itemDamage, itemStackSize);
+
+						if(ItemsMap.containsKey(itemName))
+							ItemsMap.remove(itemName);
+						
+						ItemsMap.put(itemName, stack);
+					}
 				}
 				catch (Exception ex)
 				{
