@@ -1,9 +1,9 @@
 name: SupplySign
 main: redsgreens.SupplySign.SupplySign
-version: 1.7.1
+version: 1.8.0
 author: redsgreens
 commands:
   supplysign:
     description: 'Used to reload data and list available SupplySign kits' 
     usage: '/supplysign <reload | listkits> (Used to reload data and list available SupplySign kits)'
-website: http://forums.bukkit.org/threads/7938/
+website: http://dev.bukkit.org/server-mods/supplysign/
