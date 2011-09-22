@@ -1,6 +1,6 @@
 Plugin Name: SupplySign by redsgreens
 
-URL        : http://forums.bukkit.org/threads/7938/
+URL        : http://dev.bukkit.org/server-mods/supplysign/
 
 Description: Use this plugin to distribute items and blocks to your players by creating [Supply] signs
              that load a chest interface when right-clicked.
