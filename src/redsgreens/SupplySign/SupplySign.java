@@ -120,17 +120,27 @@ public class SupplySign extends JavaPlugin {
     public boolean isAuthorized(Player p, String perm){
     	boolean retval = p.isOp();
 
-    	if(Permissions == null && retval == false && Config.AllowNonOpAccess == true)
-    		if(perm.equalsIgnoreCase("access"))
+    	if(Permissions == null && retval == false)
+    	{
+    		if(Config.AllowNonOpAccess == true && perm.equalsIgnoreCase("access"))
     			return true;
-    	
-    	try{
-    		if(Permissions != null)
-    			  if (Permissions.has(p, "supplysign." + perm))
-    			      retval = true;
+    		
+    		try
+    		{
+    			return p.hasPermission("supplysign." + perm);
+    		}
+    		catch (Exception ex){}
     	}
-    	catch (Exception ex){}
-    	
+    	else
+    	{
+        	try{
+        		if(Permissions != null)
+        			  if (Permissions.has(p, "supplysign." + perm))
+        			      retval = true;
+        	}
+        	catch (Exception ex){}
+    	}
+
     	return retval;	
     }
     
@@ -146,7 +156,6 @@ public class SupplySign extends JavaPlugin {
     	}
     	catch (Exception ex){}
     }
-
 	
     public void onDisable() {
         PluginDescriptionFile pdfFile = this.getDescription();
