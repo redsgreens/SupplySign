@@ -112,7 +112,8 @@ public class SupplySignBlockListener extends BlockListener {
 		try
 		{
 			// only proceed if it's a new sign
-			if (event.getLine(0).equalsIgnoreCase("[Supply]"))
+			if (event.getLine(0).equalsIgnoreCase("[Supply]") ||
+				event.getLine(0).equalsIgnoreCase("§1[Supply]"))
 			{
 				// and they have create permission
 				if (Plugin.isAuthorized(event.getPlayer(), "create")){
