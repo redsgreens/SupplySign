@@ -112,13 +112,17 @@ public class SupplySignBlockListener extends BlockListener {
 		try
 		{
 			// only proceed if it's a new sign
-			if (event.getLine(0).equalsIgnoreCase("[Supply]"))
+			if (event.getLine(0).equalsIgnoreCase("[Supply]") ||
+					event.getLine(0).equals("§1[Supply]"))
 			{
 				// and they have create permission
 				if (Plugin.isAuthorized(event.getPlayer(), "create")){
 					
-					// they are allowed, so set the first line to blue
-					event.setLine(0, "§1[Supply]");
+					// they are allowed, continue
+					
+					// set the first line blue if it's not already
+					if(!event.getLine(0).equals("§1[Supply]"))
+						event.setLine(0, "§1[Supply]");
 
 					// if there is a chest nearby, then create a wallsign against it
 					if(SupplySignUtil.isValidChest(signBlock.getRelative(BlockFace.NORTH)) ||
