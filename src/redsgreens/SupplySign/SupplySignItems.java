@@ -13,7 +13,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import net.minecraft.server.IInventory;
-import net.minecraft.server.InventoryPlayer;
+import net.minecraft.server.PlayerInventory;
 
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
@@ -232,9 +232,8 @@ public class SupplySignItems {
 					String itemName = parts[0].toLowerCase();
 					int itemID = Integer.parseInt(parts[1]);
 					Short itemDamage = Short.parseShort(parts[2]);
-					int itemStackSize = Integer.parseInt(parts[3]);
-					
-					SupplySignItemStack stack = new SupplySignItemStack(Material.getMaterial(itemID), itemDamage, itemStackSize);
+					Material material = Material.getMaterial(itemID);
+					SupplySignItemStack stack = new SupplySignItemStack(material, itemDamage, material.getMaxStackSize());
 					
 					ItemsMap.put(itemName, stack);
 					
@@ -255,18 +254,59 @@ public class SupplySignItems {
 	// return an ItemStack from by name
 	public ItemStack getItem(String id) throws Exception
 	{
+		// see if it's in the config files
 		String id2 = SupplySignUtil.stripColorCodes(id.toLowerCase());
 		if (ItemsMap.containsKey(id2)){
 			ItemStack is = ItemsMap.get(id2).getItemStack();
 			return is;
 		}
+		
+		try
+		{
+			// not in config files, see if bukkit can parse it
+			Material m = Material.getMaterial(id2);
+			if(m != null)
+				return new ItemStack(m, m.getMaxStackSize());
+
+			try
+			{
+				Integer i = Integer.parseInt(id2);
+				m = Material.getMaterial(i);
+				if(m != null)
+					return new ItemStack(m, m.getMaxStackSize());
+			}
+			catch(NumberFormatException nfex) {}
+			
+			// replace . with : (to allow either . or : to separate item and durability)
+			if(id2.contains("."))
+				id2.replace(".", ":");
+			
+			// there's a : in the string, see if it looks like itemid:durability
+			if(id2.contains(":"))
+			{
+				String split[] = id2.split(":");
+				if(split.length == 2)
+				{
+					Integer i = Integer.parseInt(split[0]);
+					Short d = Short.parseShort(split[1]);
+					m = Material.getMaterial(i);
+					return new ItemStack(m, m.getMaxStackSize(), d);
+				}
+			}
+
+		}
+		catch(Exception e) 
+		{
+			e.printStackTrace();
+		}
+		
 		throw new Exception("Unknown item name: " + id2);
 	}
 
 	// arranges the items to be displayed and shows the inventory dialog
 	public void showInventory(Player p, ArrayList<Object> itemList){
 		CraftPlayer cp = (CraftPlayer)p;
-		CraftInventoryPlayer inv = new CraftInventoryPlayer(new InventoryPlayer(cp.getHandle()));
+		CraftInventoryPlayer inv = new CraftInventoryPlayer(new PlayerInventory(cp.getHandle()));
 		
 		// clear the inventory
 		inv.clear();
