@@ -204,12 +204,17 @@ public class SupplySignBlockListener extends BlockListener {
 	{
 		if(event.isCancelled())
 			return;
-		
-		Dispenser d = new CraftDispenser(event.getBlock());
-		Sign s = SupplySignUtil.getAttachedSign(event.getBlock());
+
+		final Dispenser d = new CraftDispenser(event.getBlock());
+		final Sign s = SupplySignUtil.getAttachedSign(event.getBlock());
 
 		if(s != null)
-			fillDispenser(d, s);
+			Plugin.getServer().getScheduler().scheduleSyncDelayedTask(Plugin, new Runnable() {
+			    public void run() {
+					fillDispenser(d, s);
+			    }
+			}, 0);
+		
 	}
 	
 	private void fillDispenser(Dispenser dispenser, Sign sign){
@@ -236,10 +241,14 @@ public class SupplySignBlockListener extends BlockListener {
 			if(itemList.size() > 0)
 			{
 				Inventory inv = dispenser.getInventory();
+				inv.clear();
+				
+				Integer max = itemList.size();
 
-				for(int x=0; x < inv.getSize(); x++){
-					inv.clear(x);
-					inv.setItem(x, Plugin.Items.getItem(itemList.get(0).toString()));
+				for(int x=0; x < 9; x++)
+				{
+					if(x < max)
+						inv.setItem(x, Plugin.Items.getItem(itemList.get(x).toString()));
 				}
 			}
 		}

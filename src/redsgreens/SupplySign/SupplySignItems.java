@@ -196,24 +196,29 @@ public class SupplySignItems {
 
 	private void loadBaseItems() throws IOException
 	{
+
 		// recreate the file from the one in the jar every time
 		File itemsFile = new File(Plugin.getDataFolder(), "items-base.csv");
 
-		if (itemsFile.exists())
-			itemsFile.delete();
-
-		itemsFile = new File(Plugin.getDataFolder(), "items-base.csv");
-		itemsFile.createNewFile();
 		InputStream res = SupplySign.class.getResourceAsStream("/items.csv");
+		if(res != null)
+		{
 
-		FileWriter tx = new FileWriter(itemsFile);
-		for (int i = 0; (i = res.read()) > 0;) 
-			tx.write(i);
+			if (itemsFile.exists())
+				itemsFile.delete();
+
+			itemsFile = new File(Plugin.getDataFolder(), "items-base.csv");
+			itemsFile.createNewFile();
+
+			FileWriter tx = new FileWriter(itemsFile);
+			for (int i = 0; (i = res.read()) > 0;) 
+				tx.write(i);
+			
+			tx.flush();
+			tx.close();
+			res.close();
+		}
 		
-		tx.flush();
-		tx.close();
-		res.close();
-
 		ItemsMap = new HashMap<String, SupplySignItemStack>();
 		ItemsMap.clear();
 		BufferedReader rx = new BufferedReader(new FileReader(itemsFile));
