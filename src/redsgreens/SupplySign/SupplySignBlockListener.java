@@ -3,8 +3,9 @@ package redsgreens.SupplySign;
 import java.util.ArrayList;
 
 import org.bukkit.Material;
-import org.bukkit.event.block.BlockListener;
-
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.block.*;
 import org.bukkit.craftbukkit.block.CraftDispenser;
 import org.bukkit.craftbukkit.block.CraftSign;
@@ -16,7 +17,7 @@ import org.bukkit.inventory.ItemStack;
  * SupplySign block listener
  * @author redsgreens
  */
-public class SupplySignBlockListener extends BlockListener {
+public class SupplySignBlockListener implements Listener {
 
 	private final SupplySign Plugin;
 	
@@ -25,7 +26,7 @@ public class SupplySignBlockListener extends BlockListener {
     	Plugin = plugin;
     }
 
-	@Override
+    @EventHandler(priority = EventPriority.HIGHEST)
 	public void onBlockPlace(BlockPlaceEvent event) 
 	// this prevents a block from being placed against a SupplySign 
 	{
@@ -42,7 +43,7 @@ public class SupplySignBlockListener extends BlockListener {
 		}
 	}
 
-	@Override
+    @EventHandler(priority = EventPriority.HIGHEST)
 	public void onBlockBreak(BlockBreakEvent event)
 	// only allow players with permission to break a SupplySign or a chest/dispenser with one attached
 	{
@@ -72,7 +73,7 @@ public class SupplySignBlockListener extends BlockListener {
 	}
 
 	
-	@Override
+    @EventHandler(priority = EventPriority.HIGHEST)
 	public void onSignChange(SignChangeEvent event)
 	// looks for a new SupplySign and tests it for validity
 	{
@@ -200,6 +201,7 @@ public class SupplySignBlockListener extends BlockListener {
 	}
 
 	// refill the dispenser after it fires
+    @EventHandler(priority = EventPriority.MONITOR)
 	public void onBlockDispense(BlockDispenseEvent event)
 	{
 		if(event.isCancelled())

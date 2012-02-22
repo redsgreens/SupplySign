@@ -7,6 +7,9 @@ import org.bukkit.block.*;
 import org.bukkit.craftbukkit.block.CraftSign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.*;
 
@@ -14,7 +17,7 @@ import org.bukkit.event.player.*;
  * Handle events for all Player related events
  * @author redsgreens
  */
-public class SupplySignPlayerListener extends PlayerListener {
+public class SupplySignPlayerListener implements Listener {
 
 	private final SupplySign Plugin;
 	
@@ -23,7 +26,7 @@ public class SupplySignPlayerListener extends PlayerListener {
     	Plugin = plugin;
     }
 
-    @Override
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerInteract(PlayerInteractEvent event)
     // catch player right-click events
     {
