@@ -12,7 +12,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import net.minecraft.server.IInventory;
 import net.minecraft.server.PlayerInventory;
 
 import org.bukkit.Material;
@@ -437,8 +436,7 @@ public class SupplySignItems {
 		}
 		
 		// show the inventory dialog 
-		IInventory ii = (IInventory)inv.getInventory();
-		cp.getHandle().a(ii);
+		p.openInventory(inv);
 	}
 
 }

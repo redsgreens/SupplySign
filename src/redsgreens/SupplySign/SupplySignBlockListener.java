@@ -80,7 +80,7 @@ public class SupplySignBlockListener implements Listener {
 		// return if the event is already cancelled
 		if (event.isCancelled()) return;
 
-		Block signBlock = event.getBlock();
+		final Block signBlock = event.getBlock();
 
 		if(Plugin.Config.FixSignOnSignGlitch != SupplySignOnSign.Disabled){
 			// delete this sign if it's against another sign
@@ -131,11 +131,9 @@ public class SupplySignBlockListener implements Listener {
 							SupplySignUtil.isValidChest(signBlock.getRelative(BlockFace.SOUTH)) ||
 							SupplySignUtil.isValidChest(signBlock.getRelative(BlockFace.WEST))){
 
-						String[] lines = event.getLines();
+						final String[] lines = event.getLines();
 
 						signBlock.setType(Material.WALL_SIGN);
-						Sign sign = new CraftSign(signBlock);
-						
 						if(SupplySignUtil.isValidChest(signBlock.getRelative(BlockFace.NORTH)))
 							signBlock.setData((byte)5);
 						else if(SupplySignUtil.isValidChest(signBlock.getRelative(BlockFace.EAST)))
@@ -145,8 +143,21 @@ public class SupplySignBlockListener implements Listener {
 						else if(SupplySignUtil.isValidChest(signBlock.getRelative(BlockFace.WEST)))
 							signBlock.setData((byte)2);
 
-						for(int i=0; i<lines.length; i++)
-							sign.setLine(i, lines[i]);
+						Sign sign = new CraftSign(signBlock);
+						sign.update(true);
+
+						Plugin.getServer().getScheduler().scheduleSyncDelayedTask(Plugin, new Runnable() {
+						    public void run() {
+
+						    	Sign sign = new CraftSign(signBlock);
+						    	
+						    	for(int i=0; i<lines.length; i++)
+									sign.setLine(i, lines[i]);
+						    	
+						    	sign.update(true);
+						    }
+						}, 0);
+
 					}
 					// if it's a dispenser, put the sign there
 					else if(SupplySignUtil.isValidDispenser(signBlock.getRelative(BlockFace.NORTH)) ||
@@ -154,12 +165,10 @@ public class SupplySignBlockListener implements Listener {
 							SupplySignUtil.isValidDispenser(signBlock.getRelative(BlockFace.SOUTH)) ||
 							SupplySignUtil.isValidDispenser(signBlock.getRelative(BlockFace.WEST))){
 
-						String[] lines = event.getLines();
+						final String[] lines = event.getLines();
+				    	Dispenser dispenser = null;
 
 						signBlock.setType(Material.WALL_SIGN);
-						Sign sign = new CraftSign(signBlock);
-						Dispenser dispenser = null;
-						
 						if(SupplySignUtil.isValidDispenser(signBlock.getRelative(BlockFace.NORTH))){
 							signBlock.setData((byte)5);
 							dispenser = new CraftDispenser(signBlock.getRelative(BlockFace.NORTH));
@@ -177,18 +186,36 @@ public class SupplySignBlockListener implements Listener {
 							dispenser = new CraftDispenser(signBlock.getRelative(BlockFace.WEST));
 						}
 
-						for(int i=0; i<lines.length; i++)
-							sign.setLine(i, lines[i]);
+						final Dispenser d = dispenser;
 						
-						fillDispenser(dispenser, sign);
+						Sign sign = new CraftSign(signBlock);
+						sign.update(true);
+						
+						Plugin.getServer().getScheduler().scheduleSyncDelayedTask(Plugin, new Runnable() {
+						    public void run() {
+						    	
+						    	Sign sign = new CraftSign(signBlock);
+
+						    	for(int i=0; i<lines.length; i++)
+									sign.setLine(i, lines[i]);
+
+						    	sign.update(true);
+
+								fillDispenser(d, sign);
+						    }
+						}, 0);
+
 					}
  
 
 				}
 				else{
 					// not allowed
-					event.setLine(0, "§c[Err]");
-					event.setLine(1, "§cNot Allowed");
+					if(Plugin.Config.ShowErrorsInClient)
+						event.getPlayer().sendMessage("§cErr: Sign cannot be placed");
+					
+					signBlock.setType(Material.AIR);
+					signBlock.getWorld().dropItemNaturally(signBlock.getLocation(), new ItemStack(Material.SIGN, 1));
 				}
 				return;
 			}
