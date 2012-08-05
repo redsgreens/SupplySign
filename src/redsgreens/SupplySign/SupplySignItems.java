@@ -256,7 +256,7 @@ public class SupplySignItems {
 	}
 	
 	// return an ItemStack from by name
-	public ItemStack getItem(String id) throws Exception
+	public ItemStack getItem(String id) 
 	{
 		// see if it's in the config files
 		String id2 = SupplySignUtil.stripColorCodes(id.toLowerCase());
@@ -304,11 +304,20 @@ public class SupplySignItems {
 			e.printStackTrace();
 		}
 		
-		throw new Exception("Unknown item name: " + id2);
+		return null;
 	}
 
 	// arranges the items to be displayed and shows the inventory dialog
 	public void showInventory(Player p, ArrayList<Object> itemList){
+		ArrayList<ItemStack> items = new ArrayList<ItemStack>();
+		Iterator<Object> itr = itemList.iterator();
+		while(itr.hasNext())
+		{
+			ItemStack is = getItem(itr.next().toString());
+			if(is != null)
+				items.add(is);			
+		}
+		
 		CraftPlayer cp = (CraftPlayer)p;
 		CraftInventoryPlayer inv = new CraftInventoryPlayer(new PlayerInventory(cp.getHandle()));
 		
@@ -316,53 +325,55 @@ public class SupplySignItems {
 		inv.clear();
 
 		try {
-			switch(itemList.size()){
+			switch(items.size()){
+			case 0:
+				return;
 			case 1:
 				for(int i=0; i<36; i++)
-					inv.setItem(i, getItem(itemList.get(0).toString()));
+					inv.setItem(i, items.get(0));
 				break;
 
 			case 2:
 				for(int i=0; i<18; i++)
-					inv.setItem(i, getItem(itemList.get(0).toString()));
+					inv.setItem(i, items.get(0));
 				for(int i=0; i<18; i++)
-					inv.setItem(i+18, getItem(itemList.get(1).toString()));
+					inv.setItem(i+18, items.get(1));
 				break;
 			
 			case 3:
 					for(int i=0; i<4; i++){
-						inv.setItem((i*9), getItem(itemList.get(0).toString())); inv.setItem((i*9)+1, getItem(itemList.get(0).toString())); inv.setItem((i*9)+2, getItem(itemList.get(0).toString()));
-						inv.setItem((i*9)+3, getItem(itemList.get(1).toString())); inv.setItem((i*9)+4, getItem(itemList.get(1).toString())); inv.setItem((i*9)+5, getItem(itemList.get(1).toString()));
-						inv.setItem((i*9)+6, getItem(itemList.get(2).toString())); inv.setItem((i*9)+7, getItem(itemList.get(2).toString())); inv.setItem((i*9)+8, getItem(itemList.get(2).toString()));
+						inv.setItem((i*9), items.get(0)); inv.setItem((i*9)+1, items.get(0)); inv.setItem((i*9)+2, items.get(0));
+						inv.setItem((i*9)+3, items.get(1)); inv.setItem((i*9)+4, items.get(1)); inv.setItem((i*9)+5, items.get(1));
+						inv.setItem((i*9)+6, items.get(2)); inv.setItem((i*9)+7, items.get(2)); inv.setItem((i*9)+8, items.get(2));
 					}
 				break;
 				
 			case 4:
 					for(int i=0; i<4; i++)
 						for(int j=0; j<9; j++)
-							inv.setItem((i*9)+j, getItem(itemList.get(i).toString()));
+							inv.setItem((i*9)+j, items.get(i));
 				break;
 
 			case 5:
 					for(int i=0; i<4; i++)
 						for(int j=0; j<7; j++)
-							  inv.setItem((i*9)+j, getItem(itemList.get(i).toString()));
+							  inv.setItem((i*9)+j, items.get(i));
 					for(int k=0; k<4; k++){
-						inv.setItem((k*9)+7, getItem(itemList.get(4).toString()));
-						inv.setItem((k*9)+8, getItem(itemList.get(4).toString()));
+						inv.setItem((k*9)+7, items.get(4));
+						inv.setItem((k*9)+8, items.get(4));
 					}
 				break;
 				
 			case 6:
 				for(int i=0; i<2; i++){
-					inv.setItem((i*9), getItem(itemList.get(0).toString())); inv.setItem((i*9)+1, getItem(itemList.get(0).toString())); inv.setItem((i*9)+2, getItem(itemList.get(0).toString()));
-					inv.setItem((i*9)+3, getItem(itemList.get(1).toString())); inv.setItem((i*9)+4, getItem(itemList.get(1).toString())); inv.setItem((i*9)+5, getItem(itemList.get(1).toString()));
-					inv.setItem((i*9)+6, getItem(itemList.get(2).toString())); inv.setItem((i*9)+7, getItem(itemList.get(2).toString())); inv.setItem((i*9)+8, getItem(itemList.get(2).toString()));
+					inv.setItem((i*9), items.get(0)); inv.setItem((i*9)+1, items.get(0)); inv.setItem((i*9)+2, items.get(0));
+					inv.setItem((i*9)+3, items.get(1)); inv.setItem((i*9)+4, items.get(1)); inv.setItem((i*9)+5, items.get(1));
+					inv.setItem((i*9)+6, items.get(2)); inv.setItem((i*9)+7, items.get(2)); inv.setItem((i*9)+8, items.get(2));
 				}
 				for(int i=2; i<4; i++){
-					inv.setItem((i*9), getItem(itemList.get(3).toString())); inv.setItem((i*9)+1, getItem(itemList.get(3).toString())); inv.setItem((i*9)+2, getItem(itemList.get(3).toString()));
-					inv.setItem((i*9)+3, getItem(itemList.get(4).toString())); inv.setItem((i*9)+4, getItem(itemList.get(4).toString())); inv.setItem((i*9)+5, getItem(itemList.get(4).toString()));
-					inv.setItem((i*9)+6, getItem(itemList.get(5).toString())); inv.setItem((i*9)+7, getItem(itemList.get(5).toString())); inv.setItem((i*9)+8, getItem(itemList.get(5).toString()));
+					inv.setItem((i*9), items.get(3)); inv.setItem((i*9)+1, items.get(3)); inv.setItem((i*9)+2, items.get(3));
+					inv.setItem((i*9)+3, items.get(4)); inv.setItem((i*9)+4, items.get(4)); inv.setItem((i*9)+5, items.get(4));
+					inv.setItem((i*9)+6, items.get(5)); inv.setItem((i*9)+7, items.get(5)); inv.setItem((i*9)+8, items.get(5));
 				}
 
 				break;
@@ -375,7 +386,7 @@ public class SupplySignItems {
 						else jmax = 4;
 						
 						for(int j=0; j<jmax; j++)
-							  inv.setItem(pos1++, getItem(itemList.get(i).toString()));
+							  inv.setItem(pos1++, items.get(i));
 						
 					}
 				break;
@@ -383,15 +394,15 @@ public class SupplySignItems {
 			case 8:
 					int pos2 = 0;
 					for(int i=0; i<4; i++){
-						  inv.setItem(pos2++, getItem(itemList.get((2*i)).toString()));
-						  inv.setItem(pos2++, getItem(itemList.get((2*i)).toString()));
-						  inv.setItem(pos2++, getItem(itemList.get((2*i)).toString()));
-						  inv.setItem(pos2++, getItem(itemList.get((2*i)).toString()));
-						  inv.setItem(pos2++, getItem(itemList.get((2*i)+1).toString()));
-						  inv.setItem(pos2++, getItem(itemList.get((2*i)+1).toString()));
-						  inv.setItem(pos2++, getItem(itemList.get((2*i)+1).toString()));
-						  inv.setItem(pos2++, getItem(itemList.get((2*i)+1).toString()));
-						  inv.setItem(pos2++, getItem(itemList.get((2*i)+1).toString()));
+						  inv.setItem(pos2++, items.get((2*i)));
+						  inv.setItem(pos2++, items.get((2*i)));
+						  inv.setItem(pos2++, items.get((2*i)));
+						  inv.setItem(pos2++, items.get((2*i)));
+						  inv.setItem(pos2++, items.get((2*i)+1));
+						  inv.setItem(pos2++, items.get((2*i)+1));
+						  inv.setItem(pos2++, items.get((2*i)+1));
+						  inv.setItem(pos2++, items.get((2*i)+1));
+						  inv.setItem(pos2++, items.get((2*i)+1));
 					}
 				break;
 
@@ -399,7 +410,7 @@ public class SupplySignItems {
 					int pos3 = 0;
 					for(int j=0; j<4; j++)
 						for(int i=0; i<9; i++)
-							  inv.setItem(pos3++, getItem(itemList.get(i).toString()));
+							  inv.setItem(pos3++, items.get(i));
 				break;
 				
 			case 10:
@@ -408,7 +419,7 @@ public class SupplySignItems {
 				int pos4 = 0;
 					for(int i=0; i<itemList.size(); i++)
 						for(int j=0; j<3; j++)
-							  inv.setItem(pos4++, getItem(itemList.get(i).toString()));
+							  inv.setItem(pos4++, items.get(i));
 				break;
 
 			case 13:
@@ -422,14 +433,14 @@ public class SupplySignItems {
 					if(i<9)
 						pos=i;
 					else pos=i+9;
-					inv.setItem(pos, getItem(itemList.get(i).toString()));
-					inv.setItem(pos+9, getItem(itemList.get(i).toString()));
+					inv.setItem(pos, items.get(i));
+					inv.setItem(pos+9, items.get(i));
 				}
 				break;
 				
 			default: 
 				for(int i=0; i<itemList.size(); i++)
-					inv.setItem(i, getItem(itemList.get(i).toString()));
+					inv.setItem(i, items.get(i));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

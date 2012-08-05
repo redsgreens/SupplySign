@@ -12,6 +12,6 @@ diamondplus: [diamondshovel, diamondpickaxe, diamondaxe, diamondhoe, diamondswor
 woodtools: [woodshovel, woodpickaxe, woodaxe, woodhoe]
 woodplus: [woodshovel, woodpickaxe, woodaxe, woodhoe, woodsword, leatherhelmet, leatherhelmet, leatherhelmet, leatherhelmet, woodshovel, woodpickaxe, woodaxe, woodhoe, woodsword, leatherchestplate, leatherchestplate, leatherchestplate, leatherchestplate, woodshovel, woodpickaxe, woodaxe, woodhoe, woodsword, leatherleggings, leatherleggings, leatherleggings, leatherleggings, woodshovel, woodpickaxe, woodaxe, woodhoe, woodsword, leatherboots, leatherboots, leatherboots, leatherboots]
 stonebricks: [stonebrick, mossystonebrick, crackedstonebrick, stonebrickstairs, stonebrickslab]
-bigredmush: [99, 99.1, 99.2, 99.3, 99.4, 99.5, 99.6, 99.7, 99.8, 99.9, 99.10]
+bigredmush: [99, 99:1, 99:2, 99:3, 99:4, 99:5, 99:6, 99:7, 99:8, 99:9, 99:10]
 cookedmeat: [bacon, cookedchicken, steak, cookedfish]
   
