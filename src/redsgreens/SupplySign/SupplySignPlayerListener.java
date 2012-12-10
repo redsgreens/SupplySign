@@ -1,10 +1,8 @@
 package redsgreens.SupplySign;
 
 import java.util.ArrayList;
-
 import org.bukkit.Material;
 import org.bukkit.block.*;
-import org.bukkit.craftbukkit.block.CraftSign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
@@ -30,15 +28,35 @@ public class SupplySignPlayerListener implements Listener {
     public void onPlayerInteract(PlayerInteractEvent event)
     // catch player right-click events
     {
-    	// return if the event is already cancelled, or if it's not a right-click event
-		if(event.isCancelled() || event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
 
-		Block block = event.getClickedBlock();
+    	Block block;
+    	Player player = event.getPlayer();
+    	
+		// return if the event is not a right-click-block action
+		Action action = event.getAction();
+		if(action == Action.RIGHT_CLICK_BLOCK)
+			block = event.getClickedBlock();
+		else if(action == Action.RIGHT_CLICK_AIR)
+		{
+			try
+			{
+				block = player.getTargetBlock(null, 5);
+				if(block == null)
+					return;
+				else if(block.getType() == Material.AIR)
+					return;
+				else if(block.getLocation().distance(player.getLocation()) > 4)
+					return;
+			}
+			catch(Exception e)
+			{
+				return;
+			}
+		}
+		else return;
 
 		if (block.getType() != Material.WALL_SIGN && block.getType() != Material.SIGN_POST && block.getType() != Material.CHEST && block.getType() != Material.DISPENSER)
 			return;
-		
-		Player player = event.getPlayer();
 		
 		Sign sign;
 		if(block.getType() == Material.CHEST){
@@ -57,7 +75,7 @@ public class SupplySignPlayerListener implements Listener {
 			}
 		}
 		else 
-			sign = new CraftSign(block);
+			sign = (Sign)block.getState();
 		
 		try
 		{

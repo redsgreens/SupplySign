@@ -4,7 +4,6 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
-import org.bukkit.craftbukkit.block.CraftSign;
 
 public class SupplySignUtil {
 	
@@ -17,7 +16,7 @@ public class SupplySignUtil {
 
 		for(int i=0; i<adjBlocks.length; i++){
 			if(adjBlocks[i].getType() == Material.WALL_SIGN){
-				Sign sign = new CraftSign(adjBlocks[i]);
+				Sign sign = (Sign)adjBlocks[i].getState();
 				if(sign.getLine(0).equals("§1[Supply]"))
 					return false;
 			}
@@ -35,7 +34,7 @@ public class SupplySignUtil {
 
 		for(int i=0; i<adjBlocks.length; i++){
 			if(adjBlocks[i].getType() == Material.WALL_SIGN){
-				Sign sign = new CraftSign(adjBlocks[i]);
+				Sign sign = (Sign)adjBlocks[i].getState();
 				if(sign.getLine(0).equals("§1[Supply]"))
 					return false;
 			}
@@ -95,7 +94,7 @@ public class SupplySignUtil {
 
 		for(int i=0; i<adjBlocks.length; i++)
 			if(isSupplySign(adjBlocks[i]))
-				return new CraftSign(adjBlocks[i]);
+				return (Sign)adjBlocks[i].getState();
 		
 		return null;
 	}
@@ -156,7 +155,7 @@ public class SupplySignUtil {
 		if(b.getType() != Material.SIGN && b.getType() != Material.WALL_SIGN)
 			return false;
 		else
-			return isSupplySign(new CraftSign(b));
+			return isSupplySign((Sign)b.getState());
 
 	}
 }

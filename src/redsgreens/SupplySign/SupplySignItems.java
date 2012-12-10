@@ -11,13 +11,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-
-import net.minecraft.server.PlayerInventory;
-
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.entity.CraftPlayer;
-import org.bukkit.craftbukkit.inventory.CraftInventoryPlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 public class SupplySignItems {
@@ -318,8 +315,7 @@ public class SupplySignItems {
 				items.add(is);			
 		}
 		
-		CraftPlayer cp = (CraftPlayer)p;
-		CraftInventoryPlayer inv = new CraftInventoryPlayer(new PlayerInventory(cp.getHandle()));
+		Inventory inv = Plugin.getServer().createInventory(null, InventoryType.PLAYER);
 		
 		// clear the inventory
 		inv.clear();

@@ -7,8 +7,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.block.*;
-import org.bukkit.craftbukkit.block.CraftDispenser;
-import org.bukkit.craftbukkit.block.CraftSign;
 import org.bukkit.event.block.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -35,7 +33,7 @@ public class SupplySignBlockListener implements Listener {
 
 		if(event.getBlockAgainst().getType() == Material.WALL_SIGN || event.getBlockAgainst().getType() == Material.SIGN_POST)
 		{
-			Sign sign = new CraftSign(event.getBlockAgainst());
+			Sign sign = (Sign)event.getBlockAgainst().getState();
 			if (sign.getLine(0).equals("§1[Supply]")){
 				event.setCancelled(true);
 				return;
@@ -52,7 +50,7 @@ public class SupplySignBlockListener implements Listener {
 		
 		if(event.getBlock().getType() == Material.WALL_SIGN || event.getBlock().getType() == Material.SIGN_POST)
 		{
-			Sign sign = new CraftSign(event.getBlock());
+			Sign sign = (Sign)event.getBlock().getState();
 			if (sign.getLine(0).equals("§1[Supply]") && !Plugin.isAuthorized(event.getPlayer(), "destroy")){
 				event.setCancelled(true);
 				return;
@@ -91,12 +89,12 @@ public class SupplySignBlockListener implements Listener {
 					blockAgainst = signBlock.getRelative(BlockFace.DOWN);
 			}
 			else if(signBlock.getType() == Material.WALL_SIGN)
-				blockAgainst = SupplySignUtil.getBlockBehindWallSign(new CraftSign(signBlock));
+				blockAgainst = SupplySignUtil.getBlockBehindWallSign((Sign)signBlock.getState());
 				
 			if(blockAgainst != null){
 				if(blockAgainst.getType() == Material.SIGN_POST || blockAgainst.getType() == Material.WALL_SIGN){
 					// the new sign is against another sign
-					Sign signAgainst = new CraftSign(blockAgainst);
+					Sign signAgainst = (Sign)blockAgainst.getState();
 					
 					// check the config file to make sure the sign should be deleted
 					if((Plugin.Config.FixSignOnSignGlitch == SupplySignOnSign.SupplySignOnly && signAgainst.getLine(0).equals("§1[Supply]")) || Plugin.Config.FixSignOnSignGlitch == SupplySignOnSign.Global){
@@ -143,13 +141,13 @@ public class SupplySignBlockListener implements Listener {
 						else if(SupplySignUtil.isValidChest(signBlock.getRelative(BlockFace.WEST)))
 							signBlock.setData((byte)2);
 
-						Sign sign = new CraftSign(signBlock);
+						Sign sign = (Sign)signBlock.getState();
 						sign.update(true);
 
 						Plugin.getServer().getScheduler().scheduleSyncDelayedTask(Plugin, new Runnable() {
 						    public void run() {
 
-						    	Sign sign = new CraftSign(signBlock);
+						    	Sign sign = (Sign)signBlock.getState();
 						    	
 						    	for(int i=0; i<lines.length; i++)
 									sign.setLine(i, lines[i]);
@@ -171,30 +169,30 @@ public class SupplySignBlockListener implements Listener {
 						signBlock.setType(Material.WALL_SIGN);
 						if(SupplySignUtil.isValidDispenser(signBlock.getRelative(BlockFace.NORTH))){
 							signBlock.setData((byte)5);
-							dispenser = new CraftDispenser(signBlock.getRelative(BlockFace.NORTH));
+							dispenser = (Dispenser)signBlock.getRelative(BlockFace.NORTH).getState();
 						}
 						else if(SupplySignUtil.isValidDispenser(signBlock.getRelative(BlockFace.EAST))){
 							signBlock.setData((byte)3);
-							dispenser = new CraftDispenser(signBlock.getRelative(BlockFace.EAST));
+							dispenser = (Dispenser)signBlock.getRelative(BlockFace.EAST).getState();
 						}
 						else if(SupplySignUtil.isValidDispenser(signBlock.getRelative(BlockFace.SOUTH))){
 							signBlock.setData((byte)4);
-							dispenser = new CraftDispenser(signBlock.getRelative(BlockFace.SOUTH));
+							dispenser = (Dispenser)signBlock.getRelative(BlockFace.SOUTH).getState();
 						}
 						else if(SupplySignUtil.isValidDispenser(signBlock.getRelative(BlockFace.WEST))){
 							signBlock.setData((byte)2);
-							dispenser = new CraftDispenser(signBlock.getRelative(BlockFace.WEST));
+							dispenser = (Dispenser)signBlock.getRelative(BlockFace.WEST).getState();
 						}
 
 						final Dispenser d = dispenser;
 						
-						Sign sign = new CraftSign(signBlock);
+						Sign sign = (Sign)signBlock.getState();
 						sign.update(true);
 						
 						Plugin.getServer().getScheduler().scheduleSyncDelayedTask(Plugin, new Runnable() {
 						    public void run() {
 						    	
-						    	Sign sign = new CraftSign(signBlock);
+						    	Sign sign = (Sign)signBlock.getState();
 
 						    	for(int i=0; i<lines.length; i++)
 									sign.setLine(i, lines[i]);
@@ -234,7 +232,7 @@ public class SupplySignBlockListener implements Listener {
 		if(event.isCancelled())
 			return;
 
-		final Dispenser d = new CraftDispenser(event.getBlock());
+		final Dispenser d = (Dispenser)event.getBlock().getState();
 		final Sign s = SupplySignUtil.getAttachedSign(event.getBlock());
 
 		if(s != null)
