@@ -132,13 +132,13 @@ public class SupplySignBlockListener implements Listener {
 						final String[] lines = event.getLines();
 
 						signBlock.setType(Material.WALL_SIGN);
-						if(SupplySignUtil.isValidChest(signBlock.getRelative(BlockFace.NORTH)))
+						if(SupplySignUtil.isValidChest(signBlock.getRelative(BlockFace.WEST)))
 							signBlock.setData((byte)5);
-						else if(SupplySignUtil.isValidChest(signBlock.getRelative(BlockFace.EAST)))
+						else if(SupplySignUtil.isValidChest(signBlock.getRelative(BlockFace.NORTH)))
 							signBlock.setData((byte)3);
-						else if(SupplySignUtil.isValidChest(signBlock.getRelative(BlockFace.SOUTH)))
+						else if(SupplySignUtil.isValidChest(signBlock.getRelative(BlockFace.EAST)))
 							signBlock.setData((byte)4);
-						else if(SupplySignUtil.isValidChest(signBlock.getRelative(BlockFace.WEST)))
+						else if(SupplySignUtil.isValidChest(signBlock.getRelative(BlockFace.SOUTH)))
 							signBlock.setData((byte)2);
 
 						Sign sign = (Sign)signBlock.getState();
@@ -167,21 +167,21 @@ public class SupplySignBlockListener implements Listener {
 				    	Dispenser dispenser = null;
 
 						signBlock.setType(Material.WALL_SIGN);
-						if(SupplySignUtil.isValidDispenser(signBlock.getRelative(BlockFace.NORTH))){
+						if(SupplySignUtil.isValidDispenser(signBlock.getRelative(BlockFace.WEST))){
 							signBlock.setData((byte)5);
+							dispenser = (Dispenser)signBlock.getRelative(BlockFace.WEST).getState();
+						}
+						else if(SupplySignUtil.isValidDispenser(signBlock.getRelative(BlockFace.NORTH))){
+							signBlock.setData((byte)3);
 							dispenser = (Dispenser)signBlock.getRelative(BlockFace.NORTH).getState();
 						}
 						else if(SupplySignUtil.isValidDispenser(signBlock.getRelative(BlockFace.EAST))){
-							signBlock.setData((byte)3);
+							signBlock.setData((byte)4);
 							dispenser = (Dispenser)signBlock.getRelative(BlockFace.EAST).getState();
 						}
 						else if(SupplySignUtil.isValidDispenser(signBlock.getRelative(BlockFace.SOUTH))){
-							signBlock.setData((byte)4);
-							dispenser = (Dispenser)signBlock.getRelative(BlockFace.SOUTH).getState();
-						}
-						else if(SupplySignUtil.isValidDispenser(signBlock.getRelative(BlockFace.WEST))){
 							signBlock.setData((byte)2);
-							dispenser = (Dispenser)signBlock.getRelative(BlockFace.WEST).getState();
+							dispenser = (Dispenser)signBlock.getRelative(BlockFace.SOUTH).getState();
 						}
 
 						final Dispenser d = dispenser;

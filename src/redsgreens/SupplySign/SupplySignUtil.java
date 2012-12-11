@@ -119,17 +119,17 @@ public class SupplySignUtil {
 		if(sign.getType() == Material.WALL_SIGN)
 		{
 			switch(signBlock.getData()){ // determine sign direction and get block behind it
-			case 2: // facing east
-				blockAgainst = signBlock.getRelative(BlockFace.WEST);
-				break;
-			case 3: // facing west
-				blockAgainst = signBlock.getRelative(BlockFace.EAST);
-				break;
-			case 4: // facing north
+			case 2: // facing north
 				blockAgainst = signBlock.getRelative(BlockFace.SOUTH);
 				break;
-			case 5: // facing south
+			case 3: // facing south
 				blockAgainst = signBlock.getRelative(BlockFace.NORTH);
+				break;
+			case 4: // facing west
+				blockAgainst = signBlock.getRelative(BlockFace.EAST);
+				break;
+			case 5: // facing east
+				blockAgainst = signBlock.getRelative(BlockFace.WEST);
 				break;
 			}
 		}
