@@ -232,15 +232,19 @@ public class SupplySignBlockListener implements Listener {
 		if(event.isCancelled())
 			return;
 
-		final Dispenser d = (Dispenser)event.getBlock().getState();
-		final Sign s = SupplySignUtil.getAttachedSign(event.getBlock());
+		BlockState state = event.getBlock().getState();
+		if(state instanceof Dispenser)
+		{
+			final Dispenser d = (Dispenser)state;
+			final Sign s = SupplySignUtil.getAttachedSign(event.getBlock());
 
-		if(s != null)
-			Plugin.getServer().getScheduler().scheduleSyncDelayedTask(Plugin, new Runnable() {
-			    public void run() {
-					fillDispenser(d, s);
-			    }
-			}, 0);
+			if(s != null)
+				Plugin.getServer().getScheduler().scheduleSyncDelayedTask(Plugin, new Runnable() {
+				    public void run() {
+						fillDispenser(d, s);
+				    }
+				}, 0);
+		}
 		
 	}
 	
