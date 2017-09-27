@@ -91,7 +91,7 @@ public class SupplySign extends JavaPlugin {
         				return true;
     				}
     				else
-    					player.sendMessage("§cErr: You don't have SupplySign reload permission.");
+    					player.sendMessage("Â§cErr: You don't have SupplySign reload permission.");
     			}
     			else if(args[0].equalsIgnoreCase("listkits"))
     			{

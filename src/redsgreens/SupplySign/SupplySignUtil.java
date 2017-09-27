@@ -17,7 +17,7 @@ public class SupplySignUtil {
 		for(int i=0; i<adjBlocks.length; i++){
 			if(adjBlocks[i].getType() == Material.WALL_SIGN){
 				Sign sign = (Sign)adjBlocks[i].getState();
-				if(sign.getLine(0).equals("ง1[Supply]"))
+				if(sign.getLine(0).equals("ยง1[Supply]"))
 					return false;
 			}
 		}
@@ -35,7 +35,7 @@ public class SupplySignUtil {
 		for(int i=0; i<adjBlocks.length; i++){
 			if(adjBlocks[i].getType() == Material.WALL_SIGN){
 				Sign sign = (Sign)adjBlocks[i].getState();
-				if(sign.getLine(0).equals("ง1[Supply]"))
+				if(sign.getLine(0).equals("ยง1[Supply]"))
 					return false;
 			}
 		}
@@ -144,7 +144,7 @@ public class SupplySignUtil {
 
 	public static Boolean isSupplySign(Sign sign)
 	{
-		if(sign.getLine(0).equals("ง1[Supply]"))
+		if(sign.getLine(0).equals("ยง1[Supply]"))
 			return true;
 		else
 			return false;

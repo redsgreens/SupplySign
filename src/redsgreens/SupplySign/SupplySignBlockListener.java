@@ -34,7 +34,7 @@ public class SupplySignBlockListener implements Listener {
 		if(event.getBlockAgainst().getType() == Material.WALL_SIGN || event.getBlockAgainst().getType() == Material.SIGN_POST)
 		{
 			Sign sign = (Sign)event.getBlockAgainst().getState();
-			if (sign.getLine(0).equals("§1[Supply]")){
+			if (sign.getLine(0).equals("Â§1[Supply]")){
 				event.setCancelled(true);
 				return;
 			}
@@ -51,7 +51,7 @@ public class SupplySignBlockListener implements Listener {
 		if(event.getBlock().getType() == Material.WALL_SIGN || event.getBlock().getType() == Material.SIGN_POST)
 		{
 			Sign sign = (Sign)event.getBlock().getState();
-			if (sign.getLine(0).equals("§1[Supply]") && !Plugin.isAuthorized(event.getPlayer(), "destroy")){
+			if (sign.getLine(0).equals("Â§1[Supply]") && !Plugin.isAuthorized(event.getPlayer(), "destroy")){
 				event.setCancelled(true);
 				return;
 			}
@@ -97,7 +97,7 @@ public class SupplySignBlockListener implements Listener {
 					Sign signAgainst = (Sign)blockAgainst.getState();
 					
 					// check the config file to make sure the sign should be deleted
-					if((Plugin.Config.FixSignOnSignGlitch == SupplySignOnSign.SupplySignOnly && signAgainst.getLine(0).equals("§1[Supply]")) || Plugin.Config.FixSignOnSignGlitch == SupplySignOnSign.Global){
+					if((Plugin.Config.FixSignOnSignGlitch == SupplySignOnSign.SupplySignOnly && signAgainst.getLine(0).equals("Â§1[Supply]")) || Plugin.Config.FixSignOnSignGlitch == SupplySignOnSign.Global){
 						signBlock.setType(Material.AIR);
 						ItemStack signStack = new ItemStack(Material.SIGN, 1);
 						event.getPlayer().setItemInHand(signStack);
@@ -112,7 +112,7 @@ public class SupplySignBlockListener implements Listener {
 		{
 			// only proceed if it's a new sign
 			if (event.getLine(0).equalsIgnoreCase("[Supply]") ||
-					event.getLine(0).equals("§1[Supply]"))
+					event.getLine(0).equals("Â§1[Supply]"))
 			{
 				// and they have create permission
 				if (Plugin.isAuthorized(event.getPlayer(), "create")){
@@ -120,8 +120,8 @@ public class SupplySignBlockListener implements Listener {
 					// they are allowed, continue
 					
 					// set the first line blue if it's not already
-					if(!event.getLine(0).equals("§1[Supply]"))
-						event.setLine(0, "§1[Supply]");
+					if(!event.getLine(0).equals("Â§1[Supply]"))
+						event.setLine(0, "Â§1[Supply]");
 
 					// if there is a chest nearby, then create a wallsign against it
 					if(SupplySignUtil.isValidChest(signBlock.getRelative(BlockFace.NORTH)) ||
@@ -210,7 +210,7 @@ public class SupplySignBlockListener implements Listener {
 				else{
 					// not allowed
 					if(Plugin.Config.ShowErrorsInClient)
-						event.getPlayer().sendMessage("§cErr: Sign cannot be placed");
+						event.getPlayer().sendMessage("Â§cErr: Sign cannot be placed");
 					
 					signBlock.setType(Material.AIR);
 					signBlock.getWorld().dropItemNaturally(signBlock.getLocation(), new ItemStack(Material.SIGN, 1));
@@ -221,7 +221,7 @@ public class SupplySignBlockListener implements Listener {
 		catch (Throwable ex)
 		{
 			if(Plugin.Config.ShowErrorsInClient)
-				event.getPlayer().sendMessage("§cErr: " + ex.getMessage());
+				event.getPlayer().sendMessage("Â§cErr: " + ex.getMessage());
 		}
 	}
 
