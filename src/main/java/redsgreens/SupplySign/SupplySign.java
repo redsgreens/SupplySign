@@ -5,12 +5,9 @@ import java.util.*;
 import java.util.logging.Logger;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.PluginManager;
-import com.nijiko.permissions.PermissionHandler;
-import com.nijikokun.bukkit.Permissions.Permissions;
 
 /**
  * SupplySign for Bukkit
@@ -27,13 +24,8 @@ public class SupplySign extends JavaPlugin {
  	public final SupplySignKits Kits = new SupplySignKits(this);
  	public final SupplySignItems Items = new SupplySignItems(this);
 
-	public PermissionHandler Permissions = null;
-
     public void onEnable() {
     	
-    	// link to permissions
-      	setupPermissions();
-   	 
      	try {
         	// create the data folder if it doesn't exist
      		File folder = this.getDataFolder();
@@ -113,7 +105,7 @@ public class SupplySign extends JavaPlugin {
     public boolean isAuthorized(Player p, String perm){
     	boolean retval = p.isOp();
 
-    	if(Permissions == null && retval == false)
+    	if(retval == false)
     	{
     		if(Config.AllowNonOpAccess == true && perm.equalsIgnoreCase("access"))
     			return true;
@@ -124,32 +116,10 @@ public class SupplySign extends JavaPlugin {
     		}
     		catch (Exception ex){}
     	}
-    	else
-    	{
-        	try{
-        		if(Permissions != null)
-        			  if (Permissions.has(p, "supplysign." + perm))
-        			      retval = true;
-        	}
-        	catch (Exception ex){}
-    	}
 
     	return retval;	
     }
     
-    private void setupPermissions() {
-    	try{
-            Plugin test = this.getServer().getPluginManager().getPlugin("Permissions");
-
-            if (Permissions == null) {
-                if (test != null) {
-                    Permissions = ((Permissions)test).getHandler();
-                }
-            }
-    	}
-    	catch (Exception ex){}
-    }
-	
     public void onDisable() {
         PluginDescriptionFile pdfFile = this.getDescription();
         System.out.println( pdfFile.getName() + " version " + pdfFile.getVersion() + " is disabled!" );
