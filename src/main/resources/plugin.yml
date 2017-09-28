@@ -1,6 +1,6 @@
 name: SupplySign
 main: redsgreens.SupplySign.SupplySign
-version: 1.9.8
+version: 1.9.9a
 author: redsgreens
 commands:
   supplysign:
