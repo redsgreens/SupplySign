@@ -70,7 +70,7 @@ public class SupplySignPlayerListener implements Listener {
 			{ // prevent opening inventory of a dispenser with a supplysign attached
 				event.setCancelled(true);
 				if(Plugin.Config.ShowErrorsInClient)
-					player.sendMessage("§cErr: SupplySign attached to dispenser, inventory unavailable.");
+					player.sendMessage("Â§cErr: SupplySign attached to dispenser, inventory unavailable.");
 				return;
 			}
 		}
@@ -89,7 +89,7 @@ public class SupplySignPlayerListener implements Listener {
 
 					{
 						if(Plugin.Config.ShowErrorsInClient)
-							player.sendMessage("§cErr: SupplySign attached to dispenser, inventory unavailable.");
+							player.sendMessage("Â§cErr: SupplySign attached to dispenser, inventory unavailable.");
 						return;
 					}
 					else if(blockBehindSign.getType() == Material.CHEST && block.getType() == Material.WALL_SIGN) // if it's a chest simulate a click on the chest and return
@@ -110,7 +110,7 @@ public class SupplySignPlayerListener implements Listener {
 					if(Plugin.isAuthorized(player, "access") || Plugin.isAuthorized(player, "access." + split[1]))
 						itemList = Plugin.Kits.getKit(split[1]);
 					else if(Plugin.Config.ShowErrorsInClient)
-						player.sendMessage("§cErr: you don't have permission to access this SupplySign.");
+						player.sendMessage("Â§cErr: you don't have permission to access this SupplySign.");
 				}
 				else
 				{
@@ -128,7 +128,7 @@ public class SupplySignPlayerListener implements Listener {
 							itemList.add(line3);
 					}
 					else if(Plugin.Config.ShowErrorsInClient)
-						player.sendMessage("§cErr: you don't have permission to access this SupplySign.");
+						player.sendMessage("Â§cErr: you don't have permission to access this SupplySign.");
 				}
 				
 				if(itemList.size() > 0)
@@ -140,7 +140,7 @@ public class SupplySignPlayerListener implements Listener {
 		catch (Throwable ex)
 		{
 			if(Plugin.Config.ShowErrorsInClient)
-				player.sendMessage("§cErr: " + ex.getMessage());
+				player.sendMessage("Â§cErr: " + ex.getMessage());
 		}
     }
 }

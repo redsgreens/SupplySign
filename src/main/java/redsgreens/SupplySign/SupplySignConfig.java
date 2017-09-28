@@ -75,9 +75,7 @@ public class SupplySignConfig {
 
 		System.out.println("SupplySign: ShowErrorsInClient=" + ShowErrorsInClient);
 		System.out.println("SupplySign: FixSignOnSignGlitch=" + FixSignOnSignGlitch);
-		
-		if(Plugin.Permissions == null)
-			System.out.println("SupplySign: AllowNonOpAccess=" + AllowNonOpAccess);
+		System.out.println("SupplySign: AllowNonOpAccess=" + AllowNonOpAccess);
 
 	}
 
