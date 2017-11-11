@@ -103,7 +103,7 @@ public class SupplySign extends JavaPlugin {
     
     // return true if Player p has the permission perm
     public boolean isAuthorized(Player player, String perm){
-    	return player.isOp() || (Config.AllowNonOpAccess && perm.equalsIgnoreCase("access")) || player.hasPermission("supplysign" + perm); 
+    	return player.isOp() || (Config.AllowNonOpAccess && perm.equalsIgnoreCase("access")) || player.hasPermission("supplysign." + perm); 
     }
     
     public void onDisable() {
