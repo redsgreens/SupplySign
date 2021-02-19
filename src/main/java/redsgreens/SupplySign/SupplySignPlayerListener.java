@@ -3,6 +3,7 @@ package redsgreens.SupplySign;
 import java.util.ArrayList;
 import org.bukkit.Material;
 import org.bukkit.block.*;
+import org.bukkit.block.data.type.WallSign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
@@ -55,7 +56,7 @@ public class SupplySignPlayerListener implements Listener {
 		}
 		else return;
 
-		if (block.getType() != Material.WALL_SIGN && block.getType() != Material.SIGN_POST && block.getType() != Material.CHEST && block.getType() != Material.DISPENSER)
+		if (!(block.getState() instanceof WallSign) && !(block.getState() instanceof Sign) && block.getType() != Material.CHEST && block.getType() != Material.DISPENSER)
 			return;
 		
 		Sign sign;
@@ -82,7 +83,7 @@ public class SupplySignPlayerListener implements Listener {
 			if (SupplySignUtil.isSupplySign(sign)){
 				event.setCancelled(true);
 
-				if(sign.getBlock().getType() == Material.WALL_SIGN) // special checks for wall signs on chests or dispensers
+				if(sign.getBlock().getState() instanceof WallSign) // special checks for wall signs on chests or dispensers
 				{
 					Block blockBehindSign = SupplySignUtil.getBlockBehindWallSign(sign); 
 					if(blockBehindSign.getType() == Material.DISPENSER) // if it's a dispenser cancel right click on sign
@@ -92,7 +93,7 @@ public class SupplySignPlayerListener implements Listener {
 							player.sendMessage("§cErr: SupplySign attached to dispenser, inventory unavailable.");
 						return;
 					}
-					else if(blockBehindSign.getType() == Material.CHEST && block.getType() == Material.WALL_SIGN) // if it's a chest simulate a click on the chest and return
+					else if(blockBehindSign.getType() == Material.CHEST && block.getState() instanceof WallSign) // if it's a chest simulate a click on the chest and return
 					{
 							Event e = new PlayerInteractEvent(player, Action.RIGHT_CLICK_BLOCK, player.getItemInHand(), blockBehindSign, event.getBlockFace());
 							Plugin.getServer().getPluginManager().callEvent(e);

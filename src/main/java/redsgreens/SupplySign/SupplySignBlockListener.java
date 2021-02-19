@@ -3,10 +3,13 @@ package redsgreens.SupplySign;
 import java.util.ArrayList;
 
 import org.bukkit.Material;
+import org.bukkit.block.data.Directional;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.block.*;
+import org.bukkit.block.data.type.WallSign;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.event.block.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -31,7 +34,7 @@ public class SupplySignBlockListener implements Listener {
 		// return if the event is already cancelled
 		if (event.isCancelled()) return;
 
-		if(event.getBlockAgainst().getType() == Material.WALL_SIGN || event.getBlockAgainst().getType() == Material.SIGN_POST)
+		if(event.getBlockAgainst().getState() instanceof WallSign || event.getBlockAgainst().getState() instanceof Sign)
 		{
 			Sign sign = (Sign)event.getBlockAgainst().getState();
 			if (sign.getLine(0).equals("§1[Supply]")){
@@ -47,8 +50,7 @@ public class SupplySignBlockListener implements Listener {
 	{
 		// return if the event is already cancelled
 		if (event.isCancelled()) return;
-		
-		if(event.getBlock().getType() == Material.WALL_SIGN || event.getBlock().getType() == Material.SIGN_POST)
+		if(event.getBlock().getState() instanceof WallSign || event.getBlock().getState() instanceof Sign)
 		{
 			Sign sign = (Sign)event.getBlock().getState();
 			if (sign.getLine(0).equals("§1[Supply]") && !Plugin.isAuthorized(event.getPlayer(), "destroy")){
@@ -84,22 +86,22 @@ public class SupplySignBlockListener implements Listener {
 			// delete this sign if it's against another sign
 			Block blockAgainst = null;
 
-			if(signBlock.getType() == Material.SIGN_POST){
-				if(signBlock.getRelative(BlockFace.DOWN).getType() == Material.SIGN_POST || signBlock.getRelative(BlockFace.DOWN).getType() == Material.WALL_SIGN)
+			if(signBlock.getState() instanceof WallSign){
+				if(signBlock.getRelative(BlockFace.DOWN).getState() instanceof Sign || signBlock.getRelative(BlockFace.DOWN).getState() instanceof WallSign)
 					blockAgainst = signBlock.getRelative(BlockFace.DOWN);
 			}
-			else if(signBlock.getType() == Material.WALL_SIGN)
+			else if(signBlock.getState() instanceof WallSign)
 				blockAgainst = SupplySignUtil.getBlockBehindWallSign((Sign)signBlock.getState());
 				
 			if(blockAgainst != null){
-				if(blockAgainst.getType() == Material.SIGN_POST || blockAgainst.getType() == Material.WALL_SIGN){
+				if(blockAgainst.getState() instanceof Sign || blockAgainst.getState() instanceof WallSign){
 					// the new sign is against another sign
 					Sign signAgainst = (Sign)blockAgainst.getState();
 					
 					// check the config file to make sure the sign should be deleted
 					if((Plugin.Config.FixSignOnSignGlitch == SupplySignOnSign.SupplySignOnly && signAgainst.getLine(0).equals("§1[Supply]")) || Plugin.Config.FixSignOnSignGlitch == SupplySignOnSign.Global){
 						signBlock.setType(Material.AIR);
-						ItemStack signStack = new ItemStack(Material.SIGN, 1);
+						ItemStack signStack = new ItemStack(event.getBlock().getType(), 1);
 						event.getPlayer().setItemInHand(signStack);
 						return;
 					}
@@ -131,15 +133,38 @@ public class SupplySignBlockListener implements Listener {
 
 						final String[] lines = event.getLines();
 
-						signBlock.setType(Material.WALL_SIGN);
-						if(SupplySignUtil.isValidChest(signBlock.getRelative(BlockFace.WEST)))
-							signBlock.setData((byte)5);
-						else if(SupplySignUtil.isValidChest(signBlock.getRelative(BlockFace.NORTH)))
-							signBlock.setData((byte)3);
-						else if(SupplySignUtil.isValidChest(signBlock.getRelative(BlockFace.EAST)))
-							signBlock.setData((byte)4);
-						else if(SupplySignUtil.isValidChest(signBlock.getRelative(BlockFace.SOUTH)))
-							signBlock.setData((byte)2);
+						signBlock.setType(event.getBlock().getType());
+						BlockData sbd = signBlock.getBlockData();
+
+						if(SupplySignUtil.isValidChest(signBlock.getRelative(BlockFace.WEST))) {
+							//signBlock.setData((byte)5);
+							if (sbd instanceof Directional) {
+								//System.out.println("WEST Block");
+								((Directional) sbd).setFacing(BlockFace.EAST);
+								signBlock.setBlockData(sbd);
+							}
+						} else if(SupplySignUtil.isValidChest(signBlock.getRelative(BlockFace.NORTH))) {
+							//signBlock.setData((byte)3);
+							if (sbd instanceof Directional) {
+								//System.out.println("NORTH Block");
+								((Directional) sbd).setFacing(BlockFace.SOUTH);
+								signBlock.setBlockData(sbd);
+							}
+						} else if(SupplySignUtil.isValidChest(signBlock.getRelative(BlockFace.EAST))){
+							//signBlock.setData((byte)4);
+							if (sbd instanceof Directional) {
+								//System.out.println("EAST Block");
+								((Directional) sbd).setFacing(BlockFace.WEST);
+								signBlock.setBlockData(sbd);
+							}
+						} else if(SupplySignUtil.isValidChest(signBlock.getRelative(BlockFace.SOUTH))) {
+							//signBlock.setData((byte)2);
+							if (sbd instanceof Directional) {
+								//System.out.println("SOUTH Block");
+								((Directional) sbd).setFacing(BlockFace.NORTH);
+								signBlock.setBlockData(sbd);
+							}
+						}
 
 						Sign sign = (Sign)signBlock.getState();
 						sign.update(true);
@@ -166,21 +191,39 @@ public class SupplySignBlockListener implements Listener {
 						final String[] lines = event.getLines();
 				    	Dispenser dispenser = null;
 
-						signBlock.setType(Material.WALL_SIGN);
+						signBlock.setType(event.getBlock().getType());
+						BlockData sbd = signBlock.getBlockData();
+
 						if(SupplySignUtil.isValidDispenser(signBlock.getRelative(BlockFace.WEST))){
-							signBlock.setData((byte)5);
+							//signBlock.setData((byte)5);
+							if (sbd instanceof Directional) {
+								((Directional) sbd).setFacing(BlockFace.EAST);
+								signBlock.setBlockData(sbd);
+							}
 							dispenser = (Dispenser)signBlock.getRelative(BlockFace.WEST).getState();
 						}
 						else if(SupplySignUtil.isValidDispenser(signBlock.getRelative(BlockFace.NORTH))){
-							signBlock.setData((byte)3);
+							//signBlock.setData((byte)3);
+							if (sbd instanceof Directional) {
+								((Directional) sbd).setFacing(BlockFace.SOUTH);
+								signBlock.setBlockData(sbd);
+							}
 							dispenser = (Dispenser)signBlock.getRelative(BlockFace.NORTH).getState();
 						}
 						else if(SupplySignUtil.isValidDispenser(signBlock.getRelative(BlockFace.EAST))){
-							signBlock.setData((byte)4);
+							//signBlock.setData((byte)4);
+							if (sbd instanceof Directional) {
+								((Directional) sbd).setFacing(BlockFace.WEST);
+								signBlock.setBlockData(sbd);
+							}
 							dispenser = (Dispenser)signBlock.getRelative(BlockFace.EAST).getState();
 						}
 						else if(SupplySignUtil.isValidDispenser(signBlock.getRelative(BlockFace.SOUTH))){
-							signBlock.setData((byte)2);
+							//signBlock.setData((byte)2);
+							if (sbd instanceof Directional) {
+								((Directional) sbd).setFacing(BlockFace.NORTH);
+								signBlock.setBlockData(sbd);
+							}
 							dispenser = (Dispenser)signBlock.getRelative(BlockFace.SOUTH).getState();
 						}
 
@@ -213,7 +256,7 @@ public class SupplySignBlockListener implements Listener {
 						event.getPlayer().sendMessage("§cErr: Sign cannot be placed");
 					
 					signBlock.setType(Material.AIR);
-					signBlock.getWorld().dropItemNaturally(signBlock.getLocation(), new ItemStack(Material.SIGN, 1));
+					signBlock.getWorld().dropItemNaturally(signBlock.getLocation(), new ItemStack(event.getBlock().getType(), 1));
 				}
 				return;
 			}

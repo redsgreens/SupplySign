@@ -33,8 +33,8 @@ public class SupplySignItems {
 	{
 		try {
 			loadBaseItems();
-			loadCustomItems();
-			loadLegacyItems();
+			//loadCustomItems();
+			//loadLegacyItems();
 		} catch (IOException e) {}
 		
 		System.out.println("SupplySign loaded " + ItemsMap.size() + " items.");
@@ -62,11 +62,11 @@ public class SupplySignItems {
 					String[] parts = line.split(",");
 					
 					String itemName = parts[0].toLowerCase();
-					int itemID = Integer.parseInt(parts[1]);
+					String itemID = parts[1].toUpperCase();
 					Short itemDamage = Short.parseShort(parts[2]);
 					int itemStackSize = Integer.parseInt(parts[3]);
 					
-					SupplySignItemStack stack = new SupplySignItemStack(Material.getMaterial(itemID), itemDamage, itemStackSize);
+					SupplySignItemStack stack = new SupplySignItemStack(Material.matchMaterial(itemID), itemDamage, itemStackSize);
 
 					if(ItemsMap.containsKey(itemName))
 					{
@@ -162,13 +162,13 @@ public class SupplySignItems {
 					String[] parts = line.split(",");
 					
 					String itemName = parts[0].toLowerCase();
-					int itemID = Integer.parseInt(parts[1]);
+					String itemID = parts[1].toUpperCase();
 					Short itemDamage = Short.parseShort(parts[2]);
 					int itemStackSize = Integer.parseInt(parts[3]);
 
-					if(itemID > 0)
+					if(!itemID.equals(""))
 					{
-						SupplySignItemStack stack = new SupplySignItemStack(Material.getMaterial(itemID), itemDamage, itemStackSize);
+						SupplySignItemStack stack = new SupplySignItemStack(Material.matchMaterial(itemID), itemDamage, itemStackSize);
 
 						if(ItemsMap.containsKey(itemName))
 							ItemsMap.remove(itemName);
@@ -220,7 +220,6 @@ public class SupplySignItems {
 		BufferedReader rx = new BufferedReader(new FileReader(itemsFile));
 		try
 		{
-
 			for (int i = 0; rx.ready(); i++)
 			{
 				try
@@ -231,9 +230,15 @@ public class SupplySignItems {
 					String[] parts = line.split(",");
 					
 					String itemName = parts[0].toLowerCase();
-					int itemID = Integer.parseInt(parts[1]);
+					String itemID = parts[1].toUpperCase();
 					Short itemDamage = Short.parseShort(parts[2]);
-					Material material = Material.getMaterial(itemID);
+
+					
+					if(itemID.equals("COARSE_DIRT")) {
+						System.out.println("Parsed correctly: " + itemID);
+					}
+
+					Material material = Material.matchMaterial(itemID);
 					SupplySignItemStack stack = new SupplySignItemStack(material, itemDamage, material.getMaxStackSize());
 					
 					ItemsMap.put(itemName, stack);
@@ -265,14 +270,14 @@ public class SupplySignItems {
 		try
 		{
 			// not in config files, see if bukkit can parse it
-			Material m = Material.getMaterial(id2);
+			Material m = Material.matchMaterial(id2);
 			if(m != null)
 				return new ItemStack(m, m.getMaxStackSize());
 
 			try
 			{
-				Integer i = Integer.parseInt(id2);
-				m = Material.getMaterial(i);
+				String i = id2;
+				m = Material.matchMaterial(i);
 				if(m != null)
 					return new ItemStack(m, m.getMaxStackSize());
 			}
@@ -288,9 +293,9 @@ public class SupplySignItems {
 				String split[] = id2.split(":");
 				if(split.length == 2)
 				{
-					Integer i = Integer.parseInt(split[0]);
+					String i = split[0];
 					Short d = Short.parseShort(split[1]);
-					m = Material.getMaterial(i);
+					m = Material.matchMaterial(i);
 					return new ItemStack(m, m.getMaxStackSize(), d);
 				}
 			}

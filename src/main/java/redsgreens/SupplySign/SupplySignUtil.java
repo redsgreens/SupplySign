@@ -1,9 +1,12 @@
 package redsgreens.SupplySign;
 
 import org.bukkit.Material;
+import org.bukkit.block.data.type.WallSign;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
+import org.bukkit.block.data.Directional;
 
 public class SupplySignUtil {
 	
@@ -15,7 +18,7 @@ public class SupplySignUtil {
 		Block[] adjBlocks = new Block[]{b.getRelative(BlockFace.NORTH), b.getRelative(BlockFace.EAST), b.getRelative(BlockFace.SOUTH), b.getRelative(BlockFace.WEST)};
 
 		for(int i=0; i<adjBlocks.length; i++){
-			if(adjBlocks[i].getType() == Material.WALL_SIGN){
+			if(adjBlocks[i].getState() instanceof WallSign){
 				Sign sign = (Sign)adjBlocks[i].getState();
 				if(sign.getLine(0).equals("§1[Supply]"))
 					return false;
@@ -33,7 +36,7 @@ public class SupplySignUtil {
 		Block[] adjBlocks = new Block[]{b.getRelative(BlockFace.NORTH), b.getRelative(BlockFace.EAST), b.getRelative(BlockFace.SOUTH), b.getRelative(BlockFace.WEST)};
 
 		for(int i=0; i<adjBlocks.length; i++){
-			if(adjBlocks[i].getType() == Material.WALL_SIGN){
+			if(adjBlocks[i].getState() instanceof WallSign){
 				Sign sign = (Sign)adjBlocks[i].getState();
 				if(sign.getLine(0).equals("§1[Supply]"))
 					return false;
@@ -115,20 +118,22 @@ public class SupplySignUtil {
 	{
 		Block blockAgainst = null;
 		Block signBlock = sign.getBlock();
+		BlockData sbd = signBlock.getBlockData();
 		
-		if(sign.getType() == Material.WALL_SIGN)
+		if(signBlock.getState() instanceof WallSign)
 		{
-			switch(signBlock.getData()){ // determine sign direction and get block behind it
-			case 2: // facing north
+
+			switch(((Directional) sbd).getFacing()){ // determine sign direction and get block behind it
+			case NORTH: // facing north
 				blockAgainst = signBlock.getRelative(BlockFace.SOUTH);
 				break;
-			case 3: // facing south
+			case SOUTH: // facing south
 				blockAgainst = signBlock.getRelative(BlockFace.NORTH);
 				break;
-			case 4: // facing west
+			case WEST: // facing west
 				blockAgainst = signBlock.getRelative(BlockFace.EAST);
 				break;
-			case 5: // facing east
+			case EAST: // facing east
 				blockAgainst = signBlock.getRelative(BlockFace.WEST);
 				break;
 			}
@@ -152,7 +157,7 @@ public class SupplySignUtil {
 	
 	public static Boolean isSupplySign(Block b)
 	{
-		if(b.getType() != Material.SIGN && b.getType() != Material.WALL_SIGN)
+		if(!(b.getState() instanceof Sign) && !(b.getState() instanceof WallSign))
 			return false;
 		else
 			return isSupplySign((Sign)b.getState());
