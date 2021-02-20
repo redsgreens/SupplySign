@@ -33,8 +33,8 @@ public class SupplySignItems {
 	{
 		try {
 			loadBaseItems();
-			//loadCustomItems();
-			//loadLegacyItems();
+			loadCustomItems();
+			loadLegacyItems();
 		} catch (IOException e) {}
 		
 		System.out.println("SupplySign loaded " + ItemsMap.size() + " items.");

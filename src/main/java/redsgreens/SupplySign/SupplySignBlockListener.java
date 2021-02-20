@@ -137,30 +137,22 @@ public class SupplySignBlockListener implements Listener {
 						BlockData sbd = signBlock.getBlockData();
 
 						if(SupplySignUtil.isValidChest(signBlock.getRelative(BlockFace.WEST))) {
-							//signBlock.setData((byte)5);
 							if (sbd instanceof Directional) {
-								//System.out.println("WEST Block");
 								((Directional) sbd).setFacing(BlockFace.EAST);
 								signBlock.setBlockData(sbd);
 							}
 						} else if(SupplySignUtil.isValidChest(signBlock.getRelative(BlockFace.NORTH))) {
-							//signBlock.setData((byte)3);
 							if (sbd instanceof Directional) {
-								//System.out.println("NORTH Block");
 								((Directional) sbd).setFacing(BlockFace.SOUTH);
 								signBlock.setBlockData(sbd);
 							}
 						} else if(SupplySignUtil.isValidChest(signBlock.getRelative(BlockFace.EAST))){
-							//signBlock.setData((byte)4);
 							if (sbd instanceof Directional) {
-								//System.out.println("EAST Block");
 								((Directional) sbd).setFacing(BlockFace.WEST);
 								signBlock.setBlockData(sbd);
 							}
 						} else if(SupplySignUtil.isValidChest(signBlock.getRelative(BlockFace.SOUTH))) {
-							//signBlock.setData((byte)2);
 							if (sbd instanceof Directional) {
-								//System.out.println("SOUTH Block");
 								((Directional) sbd).setFacing(BlockFace.NORTH);
 								signBlock.setBlockData(sbd);
 							}
@@ -195,7 +187,6 @@ public class SupplySignBlockListener implements Listener {
 						BlockData sbd = signBlock.getBlockData();
 
 						if(SupplySignUtil.isValidDispenser(signBlock.getRelative(BlockFace.WEST))){
-							//signBlock.setData((byte)5);
 							if (sbd instanceof Directional) {
 								((Directional) sbd).setFacing(BlockFace.EAST);
 								signBlock.setBlockData(sbd);
@@ -203,7 +194,6 @@ public class SupplySignBlockListener implements Listener {
 							dispenser = (Dispenser)signBlock.getRelative(BlockFace.WEST).getState();
 						}
 						else if(SupplySignUtil.isValidDispenser(signBlock.getRelative(BlockFace.NORTH))){
-							//signBlock.setData((byte)3);
 							if (sbd instanceof Directional) {
 								((Directional) sbd).setFacing(BlockFace.SOUTH);
 								signBlock.setBlockData(sbd);
@@ -211,7 +201,6 @@ public class SupplySignBlockListener implements Listener {
 							dispenser = (Dispenser)signBlock.getRelative(BlockFace.NORTH).getState();
 						}
 						else if(SupplySignUtil.isValidDispenser(signBlock.getRelative(BlockFace.EAST))){
-							//signBlock.setData((byte)4);
 							if (sbd instanceof Directional) {
 								((Directional) sbd).setFacing(BlockFace.WEST);
 								signBlock.setBlockData(sbd);
@@ -219,7 +208,6 @@ public class SupplySignBlockListener implements Listener {
 							dispenser = (Dispenser)signBlock.getRelative(BlockFace.EAST).getState();
 						}
 						else if(SupplySignUtil.isValidDispenser(signBlock.getRelative(BlockFace.SOUTH))){
-							//signBlock.setData((byte)2);
 							if (sbd instanceof Directional) {
 								((Directional) sbd).setFacing(BlockFace.NORTH);
 								signBlock.setBlockData(sbd);
